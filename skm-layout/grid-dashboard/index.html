@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    .grid-dash * {
+      border: 1px solid;
+    }
+    .flex-sections {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .flex-sections > * {
+      flex-grow: 1;
+    }
+    .grid-dash {
+      display: grid;
+      gap: 8px;
+      grid-template-columns: repeat(auto-fit, minmax(128px, auto));
+      grid-auto-rows: 88px;
+      grid-auto-flow: dense;
+    }
+    .box {
+      padding: 0.25em;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    @media (min-width: 70em) {
+      .box--row-2 {
+        grid-row: 2;
+      }
+    }
+    .box--v-double {
+        grid-row: span 2;
+      }
+      .box--h-double {
+        grid-column: span 2;
+      }
+    hr {
+      border: none;
+      flex-grow: 0 !important;
+      align-self: center;
+      margin: 0;
+      margin-top: 3em;
+      border-left: 1px solid;
+      height: 160px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Grid dashboard</h1>
+  <div class="flex-sections">
+    <section>
+      <h2>Left stats</h2>
+      <div class="grid-dash">
+        <div class="box box--h-double">Lorem ipsum dolor sit amet.</div>
+        <div class="box box--v-double">Dignissimos quod mollitia dolores. Sit.</div>
+        <div class="box box--v-double box--h-double">Officia odit magni soluta fugit.</div>
+        <div class="box box--row-2">Ducimus labore dolore suscipit cumque?</div>
+        <div class="box box--row-2">Tenetur nam inventore beatae pariatur!</div>
+      </div>
+    </section>
+    <hr>
+    <section>
+      <h2>Right stats</h2>
+      <div class="grid-dash">
+        <div class="box">Ducimus labore dolore suscipit cumque?</div>
+        <div class="box box--h-double box--v-double">Lorem ipsum dolor sit amet.</div>
+        <div class="box box--row-2">Tenetur nam inventore beatae pariatur!</div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
