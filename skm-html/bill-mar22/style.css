@@ -1,0 +1,26 @@
+.button {
+  color: #fff;
+  background-color: green;
+  padding: 10px;
+  text-decoration: none;
+}
+
+h1 {
+  color: red;
+}
+
+p {
+  color: blue;
+}
+
+.highlight {
+  color: forestgreen;
+}
+ins {
+  text-decoration: none;
+  border: dashed;
+  font-size: larger;
+}
+.important-title {
+  text-decoration: underline;
+}
