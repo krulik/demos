@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buttons and menu exercise</title>
+  <style>
+    body {
+      font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+      background-color: rebeccapurple;
+      color: white;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .button {
+      border: 1px solid;
+      border-radius: 3px;
+      padding: 6px;
+      display: inline-block;
+      transition:
+        background-color 0.2s linear,
+        color 0.2s linear;
+    }
+    .button:hover {
+      text-decoration: none;
+      background-color: white;
+      color: rebeccapurple;
+    }
+    nav ul {
+      padding: 0;
+      list-style-type: none;
+    }
+    nav li {
+      display: inline-block;
+      margin-right: 6px;
+      border-top: 1px solid transparent;
+      padding-top: 3px;
+    }
+    nav li:hover {
+      border-top: 1px solid;
+    }
+    nav a:hover {
+      text-decoration: none;
+    }
+    /* * {
+      border: 1px solid;
+    } */
+  </style>
+</head>
+<body>
+  <h1>Buttons exercise</h1>
+  <p>
+    <a href="">I look like a link</a>
+    <a href="" class="button">I look like a button</a>
+  </p>
+  <nav>
+    <ul>
+      <li><a href="">One</a></li>
+      <li><a href="">Two</a></li>
+      <li><a href="">Three</a></li>
+      <li><a href="">Four</a></li>
+      <li><a href="">Five</a></li>
+    </ul>
+  </nav>
+</body>
+</html>
