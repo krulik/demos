@@ -19,8 +19,7 @@ h1, h2, h3, h4 {
 }
 
 img {
-  width: 100%;
-  /* max-width: 100%; */
+  max-width: 100%;
 }
 
 nav ul {
@@ -40,11 +39,10 @@ nav li {
 
 .page-section {
   padding: 16px;
-
   width: 80%;
+  max-width: 960px;
   margin-right: auto;
   margin-left: auto;
-  max-width: 960px;
 }
 
 .text-highlight {
@@ -61,7 +59,6 @@ nav li {
   padding: 12px;
   border-radius: 3px;
   display: inline-block;
-  text-align: center;
   transition:
     color .2s linear,
     background-color .2s linear;
@@ -73,9 +70,6 @@ nav li {
   color: #283F50;
 }
 
-main {
-  text-align: center;
-}
 main.page-section {
   padding-bottom: 32px;
 }
@@ -92,16 +86,4 @@ header.page-section {
   padding-top: 8px;
   margin-top: 0;
   display: inline-block;
-}
-
-@media (min-width: 900px) {
-  .columns section {
-    display: inline-block;
-    max-width: 30%;
-    vertical-align: top;
-  }
-
-  .columns section:not(:last-child) {
-    margin-right: 5%;
-  }
 }
