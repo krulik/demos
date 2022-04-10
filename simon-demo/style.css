@@ -1,0 +1,61 @@
+body {
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin: 0;
+  color: #333;
+}
+
+a {
+  color: inherit;
+}
+
+* {
+  /* background-color: rgba(255,0,0,0.1); */
+}
+
+header {
+  border-bottom: 1px solid;
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-columns {
+  flex-grow: 1;
+
+  display: grid;
+  grid-template-columns: 20% auto;
+}
+
+.padding {
+  padding: 1em;
+}
+
+nav {
+  border-right: 1px solid;
+  margin: 0;
+}
+
+nav ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+nav li {
+  border-bottom: 1px solid;
+  display: block;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 0.5em;
+  display: block;
+}
+
+nav li:hover a {
+  background-color: #333;
+  color: white;
+}

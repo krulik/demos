@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo for Simon</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page">
+  <header class="padding">
+    <h1>Site title</h1>
+  </header>
+  <div class="page-columns">
+    <nav>
+      <ul>
+        <li><a href="index.html">Form 1</a></li>
+        <li><a href="form_2.html">Form 2</a></li>
+      </ul>
+    </nav>
+    <main class="padding">
+      <h2>Form 1</h2>
+      <form action="http://server.com/form1">
+        <p>
+          <label for="upload">Upload file</label>
+          <input type="file" id="upload" name="fileName">
+        </p>
+        <p>
+          <label for="customer">Choose customer</label>
+          <select name="customer" id="customer">
+            <option value="value_1">Option 1</option>
+            <option value="value_2">Option 2</option>
+            <option value="value_3">Option 3</option>
+          </select>
+        </p>
+        <p>
+          <label for="default">Default</label>
+          <input type="text" id="default" name="default">
+        </p>
+        <p>
+          <button>Submit</button>
+        </p>
+      </form>
+    </main>
+  </div>
+</body>
+</html>
