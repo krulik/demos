@@ -23,15 +23,25 @@ img {
   /* max-width: 100%; */
 }
 
+nav * {
+  /* outline: 1px solid; */
+}
+
 nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
+  margin-top: 8px;
   display: flex;
+  flex-wrap: wrap;
 }
 
 nav li:not(:last-child) {
   margin-right: 16px;
+}
+
+nav a {
+  display: block;
 }
 
 .alt-background {
@@ -55,6 +65,10 @@ nav li:not(:last-child) {
 .text-capital {
   text-transform: uppercase;
   font-size: smaller;
+}
+
+.text-right {
+  text-align: right;
 }
 
 .button {
@@ -87,9 +101,6 @@ main h2 {
 header.page-section {
   padding-top: 0;
 }
-header nav {
-  margin-top: 8px;
-}
 
 .logo {
   text-transform: uppercase;
@@ -100,18 +111,20 @@ header nav {
 }
 
 @media (min-width: 900px) {
+
   header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
   }
-  header div {
+
+  .nav-wrapper {
     text-align: right;
   }
 
   .logo {
-    max-width: 250px;
     margin-bottom: 0;
+    max-width: 250px;
   }
 
   .columns section {
