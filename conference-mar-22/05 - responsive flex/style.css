@@ -122,19 +122,28 @@ header.page-section {
     text-align: right;
   }
 
+  footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  footer nav ul {
+    margin-top: 0;
+  }
+
   .logo {
     margin-bottom: 0;
     max-width: 250px;
   }
 
-  .columns section {
-    display: inline-block;
-    max-width: 30%;
-    vertical-align: top;
+  .columns {
+    display: flex;
+    justify-content: space-between;
   }
 
-  .columns section:not(:last-child) {
-    margin-right: 5%;
+  .columns section {
+    max-width: 30%;
   }
 }
 
