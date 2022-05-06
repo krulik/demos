@@ -49,6 +49,11 @@ nav a {
   background-color: white;
 }
 
+.green-background {
+  color: #777;
+  background-image: linear-gradient(90deg, rgba(161,212,176,1) 0%, rgba(244,240,210,1) 100%);
+}
+
 .page-section {
   padding: 16px;
 
@@ -88,14 +93,14 @@ nav a {
   color: #283F50;
 }
 
-main {
+.lead {
   text-align: center;
 }
-main.page-section {
+.lead.page-section {
   padding-top: 32px;
   padding-bottom: 32px;
 }
-main h2 {
+.lead h2 {
   margin-top: 0;
 }
 header.page-section {
