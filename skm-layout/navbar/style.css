@@ -22,12 +22,20 @@ nav * {
   /* border: 1px solid; */
 }
 
+nav {
+  display: flex;
+  background-color: gold;
+  align-items: center;
+  padding-right: 1em;
+}
+
 nav ul {
   background-color: gold;
 }
 
 nav > ul {
   display: flex;
+  flex-grow: 1;
 }
 
 nav ul ul {
@@ -53,4 +61,24 @@ nav a:focus {
 
 main {
   padding: 1em;
+}
+
+@media (any-hover: none) {
+  nav {
+    display: block;
+  }
+  nav > ul {
+    display: block;
+  }
+  nav form {
+    padding: 1em;
+  }
+  nav > ul > li {
+    border-bottom: 1px solid;
+  }
+  nav ul ul {
+    border-top: 1px dashed;
+    position: static;
+    display: flex;
+  }
 }
