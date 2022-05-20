@@ -1,3 +1,7 @@
+html {
+  font-size: 0.75rem;
+}
+
 body {
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   background-color: #283F50;
@@ -16,6 +20,8 @@ a:hover {
 
 h1, h2, h3, h4 {
   font-weight: 100;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 
 img {
@@ -27,13 +33,13 @@ nav ul {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  margin-top: 8px;
+  margin-top: 0.5em;
   display: flex;
   flex-wrap: wrap;
 }
 
 nav li:not(:last-child) {
-  margin-right: 16px;
+  margin-right: 1em;
 }
 
 nav a {
@@ -51,12 +57,12 @@ nav a {
 }
 
 .page-section {
-  padding: 16px;
+  padding: 1em;
 
   width: 80%;
   margin-right: auto;
   margin-left: auto;
-  max-width: 800px;
+  max-width: 50em;
 }
 
 .text-highlight {
@@ -65,16 +71,31 @@ nav a {
 
 .text-capital {
   text-transform: uppercase;
-  font-size: smaller;
 }
 
 .text-right {
   text-align: right;
 }
 
+.text-size-small {
+  font-size: 0.875rem;
+}
+
+.text-size-large {
+  font-size: 1.3125rem;
+}
+
+.text-size-heading-page {
+  font-size: 2.25rem;
+}
+
+.text-size-heading-medium {
+  font-size: 1.5rem;
+}
+
 .button {
   border: 1px solid;
-  padding: 12px;
+  padding: 0.75em;
   border-radius: 3px;
   display: inline-block;
   text-align: center;
@@ -93,25 +114,37 @@ nav a {
   text-align: center;
 }
 .lead.page-section {
-  padding-top: 32px;
-  padding-bottom: 32px;
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
 }
 .lead h2 {
   margin-top: 0;
 }
 header.page-section {
   padding-top: 0;
+  padding-bottom: 1.5em;
 }
 
 .logo {
   text-transform: uppercase;
   border-top: 4px solid #5C817B;
-  padding-top: 8px;
+  padding-top: 0.5em;
   margin-top: 0;
   display: inline-block;
+  font-size: 3rem;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 30em) {
+  html {
+    font-size: 1rem;
+  }
+}
+
+@media (min-width: 60em) {
+
+  html {
+    font-size: 1.125rem;
+  }
 
   header {
     display: flex;
@@ -135,7 +168,8 @@ header.page-section {
 
   .logo {
     margin-bottom: 0;
-    max-width: 250px;
+    max-width: 6.2em;
+    margin-bottom: -0.2em;
   }
 
   .columns {
@@ -150,7 +184,7 @@ header.page-section {
   .speaker {
     display: flex;
     align-items: flex-start;
-    gap: 32px;
+    gap: 2em;
   }
 
   .speaker-info {
@@ -178,11 +212,11 @@ header.page-section {
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 8px;
-  margin-top: 32px;
-  padding: 16px;
+  margin-top: 2em;
+  padding: 1em;
 }
 
 .speaker-avatar img {
   border-radius: 50%;
-  margin-top: -32px;
+  margin-top: -2em;
 }
