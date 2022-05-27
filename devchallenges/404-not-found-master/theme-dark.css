@@ -1,0 +1,9 @@
+html {
+  --color-background: black;
+  --color-on-background: white;
+  --color-on-background-light: #fff;
+  --color-on-background-xlight: #BDBDBD;
+
+  --color-background-invert: #fff;
+  --color-on-background-invert: #333;
+}
