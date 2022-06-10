@@ -29,4 +29,4 @@ function handleEvent(e) {
 }
 
 const button = document.querySelector('button');
-button.addEventListener('click', handleEvent());
+button.addEventListener('click', handleEvent);
