@@ -1,12 +1,11 @@
 export const grades = [
-  {name: 'Leonardo', grade: 82, color: 'blue', type: 'turtle'},
-  {name: 'Donatello', grade: 100, color: 'purple', type: 'turtle'},
-  {name: 'Rafael', grade: 45, color: 'red', type: 'turtle'},
-  {name: 'Michelangelo', grade: 53, color: 'orange', type: 'turtle'},
-  {name: 'Splinter', grade: 100, color: 'gray', type: 'rat'},
-  {name: 'Shredder', grade: 67, color: 'purple', type: 'human'},
-  {name: 'Rocksteady', grade: 14, color: 'lightgray', type: 'rhino'},
-  {name: 'Bebop', grade: 24, color: 'brown', type: 'boar'},
-  {name: 'Krang', grade: 100, color: 'pink', type: 'brain'},
-  {name: 'April', grade: 100, color: 'gold', type: 'human'}
+  {name: 'Leonardo', grade: 82, color: 'blue', icon: 'leonardo'},
+  {name: 'Donatello', grade: 100, color: 'purple', icon: 'donatello'},
+  {name: 'Raphael', grade: 45, color: 'red', icon: 'raphael'},
+  {name: 'Michelangelo', grade: 53, color: 'orange', icon: 'michaelangelo'},
+  {name: 'Splinter', grade: 100, color: 'gray', icon: 'splinter'},
+  {name: 'Shredder', grade: 67, color: 'purple', icon: 'shredder'},
+  {name: 'Rocksteady', grade: 14, color: '#666', icon: 'rocksteady'},
+  {name: 'Bebop', grade: 24, color: 'brown', icon: 'bebop'},
+  {name: 'April', grade: 100, color: 'gold', icon: 'april'}
 ];

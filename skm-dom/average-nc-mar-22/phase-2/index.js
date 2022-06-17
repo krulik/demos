@@ -57,6 +57,12 @@ function getColumn(key, value) {
         column.style.backgroundColor = value;
         column.style.width = '30px';
         break;
+      case 'icon':
+        const img = document.createElement('img');
+        img.src = `./icons/${value}.png`;
+        img.height = 50;
+        column.append(img);
+        break;
       default:
         column.append(value);
         break;
