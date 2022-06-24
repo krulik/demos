@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { getToDos, setToDos, deleteToDo, updateToDo, addToDo } = require("./todos");
+const { getToDos, setToDos, deleteToDo, updateToDo, addToDo, searchTodo } = require("./todos");
 
 function displayToDos() {
     // const display = getToDos().map(function(todo, index) {
@@ -25,10 +25,14 @@ switch (crud) {
         console.log(`removed successfully: task`, id);
         break;
     case 'update':
-        const [, ...sentence] = text;
-        updateToDo(id, sentence.join(` `));
-        console.log(`task ${id} has been updated to ${sentence.join(` `)}`)
+        const [, par, ...sentence] = text;
+        updateToDo(id, par, sentence.join(` `));
+        console.log(`the ${par} in task ${id} has been updated to ${sentence.join(` `)}`)
         break;
+    case 'search':
+        const[, whereToLook] = text;
+        console.log(`we found ${searchTodo(text, whereToLook)}.`);
+
     default:
         console.log('write something valid')
 
