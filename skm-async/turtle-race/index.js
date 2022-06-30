@@ -57,7 +57,7 @@ function tick(state, data, config) {
     }
   }
   updateTracks(data);
-  gameTimer.id = requestAnimationFrame(() => tick(state, data, config), 1000 / 60);
+  gameTimer.id = setTimeout(() => tick(state, data, config), 1000 / 60);
   setState(state);
 }
 
