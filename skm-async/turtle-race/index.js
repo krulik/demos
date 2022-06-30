@@ -109,8 +109,10 @@ function renderInterface(state) {
   }
 }
 
-const limit = document.querySelector('#tracks').offsetWidth;
-const config = {limit, iconWidth: 50};
+const config = {
+  limit: document.querySelector('#tracks').offsetWidth,
+  iconWidth: 50
+};
 const state = {
   gameTimer: {id: null},
   winner: null,
@@ -118,6 +120,9 @@ const state = {
   startTime: null
 };
 
+window.addEventListener('resize', () => {
+  config.limit = document.querySelector('#tracks').offsetWidth;
+});
 document.querySelector('#reset').addEventListener('click', () => resetPosition(data, 0));
 document.querySelector('#restart').addEventListener('click', () => {
   clearTimeout(state.gameTimer.id);
