@@ -9,16 +9,18 @@ document.querySelector('#generate').addEventListener('click', generate);
 
 function generate() {
   if (state.next) {
-    displayAndFetch(state.next);
+    displayAndPreFetch(state.next);
   } else {
-    displayAndFetch().then(generate);
+    displayAndPreFetch({
+      quoteText: 'Loading...',
+      quoteAuthor: '',
+      quoteGenre: ''
+    }).then(generate);
   }
 }
 
-function displayAndFetch(q) {
-  if (q) {
-    renderQuote(q);
-  }
+function displayAndPreFetch(q) {
+  renderQuote(q);
   return getRandomQuote().then(q => {
     state.next = q;
   });
