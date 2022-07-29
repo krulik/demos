@@ -20,15 +20,14 @@ function divide(a, b) {
   return a / b;
 }
 
-function delayedMath(fn, a, b, callback) {
+function delayedMath(fn, a, b) {
   setTimeout(() => {
     const result = fn(a, b);
     if (result instanceof Error) {
-      callback(result, null);
-      return;
+      throw result;
     }
     console.log(result);
-    callback(null, result);
+    return result;
   }, 1000);
 }
 
