@@ -4,7 +4,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Route, Routes, HashRouter } from "react-router-dom";
-import Feed from './Feed';
+import Feed from './Feed/Feed';
 import {PostContainer} from './Post';
 
 const root = ReactDOM.createRoot(

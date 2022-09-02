@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet } from 'react-router';
-import {Post} from './Post';
+import {Post} from '../Post';
+import './Feed.css';
 
 async function getJSON(url: string) {
   const res = await fetch(url);
@@ -16,13 +16,9 @@ export default function Feed() {
       setPosts(await getJSON(`./data/posts.json?page=${page}`));
     }
     setData();
-  }, [page])
+  }, [page]);
 
-  useEffect(() => {
-    console.log('render Feed');
-  })
-
-  return <div>
+  return <div className='Feed'>
     <ul>
       {posts.map((post, i) => <li key={i}>
         <Post post={post}></Post>
