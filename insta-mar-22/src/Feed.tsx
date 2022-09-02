@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router';
-import Post from './Post';
+import {Post} from './Post';
 
 async function getJSON(url: string) {
   const res = await fetch(url);

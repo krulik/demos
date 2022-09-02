@@ -11,8 +11,19 @@ interface IPost {
   title: string;
 }
 
-export default function Post({post}: {post?: IPost}) {
+function Post({post}: {post: IPost}) {
   const [numLikes, addLike] = useState(0);
+
+  return <div>
+    <h2><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
+    <p>Num likes {numLikes}</p>
+    <Like onLike={() => addLike(numLikes + 1)}>
+      <strong>Bla bla</strong>
+    </Like>
+  </div>
+}
+
+function PostContainer() {
   const [dynamicPost, setDynamicPost] = useState({title: '', id: ''});
   const params = useParams();
 
@@ -20,18 +31,11 @@ export default function Post({post}: {post?: IPost}) {
     async function setDynamicData() {
       setDynamicPost(await getJSON(`./data/post.${params.postId}.json`))
     }
-    if (!post) {
-      setDynamicData();
-    }
-  }, [params.postId, post]);
+    setDynamicData();
 
-  return <div>
-    <h2><Link to={`/posts/${post?.id}`}>{post?.title || dynamicPost?.title}</Link></h2>
-    <p>Num likes {numLikes}</p>
-    <Like onLike={() => addLike(numLikes + 1)}>
-      <strong>Bla bla</strong>
-    </Like>
-  </div>
+  }, [params.postId]);
+
+  return <Post post={dynamicPost}></Post>
 }
 
 interface IPropsLike {
@@ -42,3 +46,5 @@ interface IPropsLike {
 function Like({onLike, children}: IPropsLike) {
   return <button onClick={onLike}>{children}</button>
 }
+
+export {Post, PostContainer};

@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { Route, Routes, HashRouter } from "react-router-dom";
 import Feed from './Feed';
-import Post from './Post';
+import {PostContainer} from './Post';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,7 +16,7 @@ root.render(
       <Routes>
         <Route path='/' element={<App></App>}>
           <Route path='feed' element={<Feed></Feed>}></Route>
-          <Route path='posts/:postId' element={<Post></Post>}></Route>
+          <Route path='posts/:postId' element={<PostContainer></PostContainer>}></Route>
         </Route>
       </Routes>
     </HashRouter>
