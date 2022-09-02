@@ -8,7 +8,7 @@ async function getJSON(url: string) {
 
 interface IPost {
   id: string;
-  title: string;
+  title: string
 }
 
 function Post({post}: {post: IPost}) {
@@ -18,13 +18,16 @@ function Post({post}: {post: IPost}) {
     <h2><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
     <p>Num likes {numLikes}</p>
     <Like onLike={() => addLike(numLikes + 1)}>
-      <strong>Bla bla</strong>
+      <strong>Like</strong>
     </Like>
   </div>
 }
 
 function PostContainer() {
-  const [dynamicPost, setDynamicPost] = useState({title: '', id: ''});
+  const [dynamicPost, setDynamicPost] = useState({
+    title: '',
+    id: ''
+  });
   const params = useParams();
 
   useEffect(() => {
