@@ -34,9 +34,16 @@ function Flex({children, dir}: {children: JSX.Element[], dir?: FlexDirection}) {
 
 function List({children}: {children: JSX.Element[]}) {
   return <ul style={ {
-    listStyleType: 'none'
+    listStyleType: 'none',
+    padding: 0,
+    margin: '0 auto',
+    border: '1px solid',
+    maxWidth: '80%',
   } }>
-    {children.map((child, i) => <li key={i}>{child}</li>)}
+    {children.map((child, i) => <li key={i} style={{
+      border: '1px solid',
+      marginBottom: '1em'
+    }}>{child}</li>)}
   </ul>;
 }
 
@@ -56,19 +63,5 @@ export default function Feed() {
     <List>
       {posts.map((post, i) => <Post key={i} post={post}></Post>)}
     </List>
-    <div>
-      <button onClick={() => toggleRow(!isRow)}>Change flex dir</button>
-      <Flex dir={isRow ? 'row' : 'column'}>
-        <Box>
-          <p>hello</p>
-        </Box>
-        <Box>
-          <p>hello</p>
-        </Box>
-        <Box>
-          <p>hello</p>
-        </Box>
-      </Flex>
-    </div>
   </div>
 }

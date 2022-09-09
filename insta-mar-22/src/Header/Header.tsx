@@ -2,7 +2,10 @@ import React from 'react';
 import { Link } from "react-router-dom";
 
 function Header() {
-  return <header>
+  return <header style={{
+    border: '1px solid',
+    backgroundColor: 'white'
+  }}>
     Hello
     <nav>
       <ul>
