@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, ReactNode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
@@ -10,16 +10,61 @@ import {PostContainer} from './Post';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+interface UserInfoType {
+  userName: string;
+  email: string;
+}
+
+interface UserInfoContextType {
+  userInfo: UserInfoType;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserInfoType>>;
+}
+
+export const UserInfoContext = createContext<UserInfoContextType>({
+  userInfo: {
+    userName: '',
+    email: ''
+  },
+  setUserInfo: () => {}
+});
+
+
+export const ConfigContext = createContext({
+  apiUrl: process.env.API_URL,
+  blababa: 'adsasdsad'
+})
+
+function UserContextWrapper({children}: {children: ReactNode}) {
+  const [userInfo, setUserInfo] = useState<UserInfoType>({
+    userName: '',
+    email: ''
+  });
+
+  let contextValue = {
+    userInfo,
+    setUserInfo
+  };
+
+  return <>
+    <UserInfoContext.Provider value={contextValue}>
+      {children}
+    </UserInfoContext.Provider>
+  </>;
+}
+
 root.render(
   <React.StrictMode>
-    <HashRouter>
-      <Routes>
-        <Route path='/' element={<App></App>}>
-          <Route path='feed' element={<Feed></Feed>}></Route>
-          <Route path='posts/:postId' element={<PostContainer></PostContainer>}></Route>
-        </Route>
-      </Routes>
-    </HashRouter>
+    <UserContextWrapper>
+      <HashRouter>
+        <Routes>
+          <Route path='/' element={<App></App>}>
+            <Route path='feed' element={<Feed></Feed>}></Route>
+            <Route path='posts/:postId' element={<PostContainer></PostContainer>}></Route>
+          </Route>
+        </Routes>
+      </HashRouter>
+    </UserContextWrapper>
   </React.StrictMode>
 );
 

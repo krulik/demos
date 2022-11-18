@@ -12,12 +12,17 @@ interface IPost {
 }
 
 function Post({post}: {post: IPost}) {
-  const [numLikes, addLike] = useState(0);
+  const [numLikes, setNumLikes] = useState(0);
+
+  async function postLike() {
+    const res = await getJSON(`./data/like.${post.id}.json`);
+    setNumLikes(res.numLikes);
+  }
 
   return <div>
     <h2><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
     <p>Num likes {numLikes}</p>
-    <Like onLike={() => addLike(numLikes + 1)}>
+    <Like onLike={() => postLike()}>
       <strong>Like</strong>
     </Like>
   </div>
@@ -43,7 +48,7 @@ function PostContainer() {
 
 interface IPropsLike {
   onLike: () => void;
-  children: JSX.Element;
+  children: React.ReactNode;
 }
 
 function Like({onLike, children}: IPropsLike) {
