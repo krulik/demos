@@ -24,7 +24,11 @@ h1, h2, h3, h4, h5, h6 {
 
 .menu li {
   display: inline-block;
-  margin-right: 0.5em;
+  margin-right: 1em;
+}
+
+.menu li:last-child {
+  margin-right: 0;
 }
 
 .menu li a {
@@ -92,6 +96,7 @@ h1, h2, h3, h4, h5, h6 {
 .logo {
   border-top: 0.125em solid #5C817B;
   display: inline-block;
+  max-width: 7em;
 }
 
 .jumbo {
@@ -99,4 +104,40 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: auto;
   margin-left: auto;
   text-align: center;
+}
+
+html {
+  font-size: 0.8rem;
+}
+
+@media (min-width: 56em) {
+  html {
+    font-size: 1rem;
+  }
+
+  .columns {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  .columns > * {
+    flex-basis: 0;
+    flex-grow: 1;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  header div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+
+  header .menu {
+    margin-bottom: 0;
+  }
 }
