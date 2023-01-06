@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid Exercise</title>
+  <style>
+    body {
+      font-size: 1.5rem;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 150px);
+      /* grid-auto-rows: 150px; */
+      gap: 20px;
+
+      counter-reset: my;
+    }
+    .container div {
+      background-color: cadetblue;
+      color: white;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      position: relative;
+    }
+
+    .container div::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin: 0.5em;
+      border-radius: 50%;
+      background-color: lightgreen;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .container div:nth-child(even)::before {
+      background-color: firebrick;
+    }
+
+    .container div::after {
+      counter-increment: my;
+      content: ": " counter(my);
+    }
+
+    .container div:nth-child(3) {
+      background-color: aqua;
+      color: black;
+      grid-row-start: 3;
+      grid-row-end: -1;
+    }
+    .container div:nth-child(2) {
+      background-color: hotpink;
+      grid-column: span 3;
+    }
+    .container div:nth-child(4) {
+      background-color: gold;
+      color: black;
+      grid-row: span 2;
+    }
+    .container div:nth-child(7) {
+      background-color: skyblue;
+      color: black;
+      grid-column: 3 / -1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div>One</div>
+    <div>Two</div>
+    <div>Three</div>
+    <div>Four</div>
+    <div>Five</div>
+    <div>Six</div>
+    <div>Seven</div>
+    <div>Eight</div>
+    <div>Nine</div>
+    <div>Ten</div>
+  </div>
+</body>
+</html>
