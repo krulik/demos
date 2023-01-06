@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      padding: 0;
+      margin: 0;
+
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+      display: grid;
+      grid-template-columns: 1fr 3fr 1fr;
+      grid-template-rows: auto 1fr 80px;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #FFD56F;
+      grid-column: span 3;
+
+      display: flex;
+      align-items: stretch;
+    }
+
+    header nav {
+      flex-grow: 1;
+    }
+
+    main {
+      background-color: #939B62;
+      grid-column: 2 / 3;
+
+      padding: 1em;
+      overflow: auto;
+    }
+
+    aside {
+      background-color: #FF7B54;
+      grid-column-start: 1;
+      grid-row-start: 2;
+
+      padding: 1em;
+      overflow: auto;
+    }
+
+    aside+aside {
+      grid-column-start: 3;
+    }
+
+    footer {
+      background-color: black;
+      color: white;
+      grid-column: span 3;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    footer ul {
+      display: flex;
+      gap: 1em;
+    }
+    ul.reset {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    .users {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5em;
+      counter-reset: users;
+    }
+    .users > * {
+      position: relative;
+    }
+    .users > *::after {
+      counter-increment: users;
+      content: "user #" counter(users);
+    }
+    .users > *::before {
+      content: "";
+      display: block;
+      position: absolute;
+      width: 0.5em;
+      height: 0.5em;
+      background-color: lightgreen;
+      border-radius: 50%;
+      top: 0.5em;
+      left: 0.5em;
+      z-index: 1;
+    }
+    .users > *:nth-child(even)::before {
+      background-color: red;
+    }
+    .users > *:nth-child(even) img {
+      opacity: 0.5;
+    }
+    .users img {
+      max-width: 100%;
+      display: block;
+      border-radius: 0.5em;
+    }
+    body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+nav a {
+  text-decoration: none;
+}
+
+nav * {
+  /* border: 1px solid; */
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  padding-right: 1em;
+}
+
+nav > ul {
+  display: flex;
+  flex-grow: 1;
+}
+
+nav ul ul {
+  position: absolute;
+  display: none;
+  background-color: #FFD56F;
+}
+
+nav li:hover ul,
+nav li:focus-within ul {
+  display: block;
+}
+
+nav a {
+  padding: 1em;
+  display: block;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: lightpink;
+  outline: 0;
+}
+
+blockquote::before,
+blockquote::after {
+  content: '"';
+}
+
+.quote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #FFB26B;
+}
+
+@media (max-width: 90em) {
+  body {
+    grid-template-columns: 3fr 1fr;
+    grid-template-rows: auto 3fr 1fr 80px;
+  }
+  aside, aside+aside, main, .quote, footer {
+    grid-column-start: auto;
+    grid-column-end: auto;
+    grid-row-start: auto;
+    grid-row-end: auto;
+  }
+  .quote {
+    grid-row-start: 3;
+    grid-column: span 2;
+  }
+  footer {
+    grid-row-start: 4;
+    grid-column: span 2;
+  }
+  .users {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (any-hover: none) {
+  nav {
+    display: block;
+  }
+  nav > ul {
+    display: block;
+  }
+  nav form {
+    padding: 1em;
+  }
+  nav > ul > li {
+    border-bottom: 1px solid;
+  }
+  nav ul ul {
+    border-top: 1px dashed;
+    position: static;
+    display: flex;
+  }
+}
+  </style>
+</head>
+
+<body>
+  <header>
+    <nav>
+      <ul>
+        <li><a href="">One</a></li>
+        <li><a href="">Two</a></li>
+        <li>
+          <a href="">Three</a>
+          <ul>
+            <li><a href="">One</a></li>
+            <li><a href="">Two</a></li>
+            <li><a href="">Three</a></li>
+          </ul>
+        </li>
+        <li><a href="">Four</a></li>
+        <li><a href="">Five</a></li>
+      </ul>
+      <form action="/search">
+        <input type="search" aria-label="Site search" placeholder="Your query...">
+        <button>Search</button>
+      </form>
+    </nav>
+  </header>
+  <main>
+    <h1>Lorem ipsum dolor sit amet.</h1>
+    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita minima quis magnam impedit corrupti. Fugiat voluptatem placeat voluptatum animi maiores, magnam dolores facere qui nostrum quas voluptates eum tempora. Dignissimos temporibus reprehenderit iste! Quo, ducimus. Explicabo minus exercitationem possimus rerum ratione quos laborum pariatur? Fugit, quibusdam. Dolore officia quaerat reiciendis.</p>
+    <p>Ab quod autem perferendis cumque. Maiores praesentium in saepe minima ex, dolorum enim error harum facere ipsa! Ut temporibus assumenda magnam possimus molestias velit dolorem iure iste nulla, facilis adipisci sapiente cupiditate. Explicabo, quod provident dicta consectetur aliquam voluptatum debitis corporis. Deserunt illo cum saepe dolores itaque minima facere consequatur.</p>
+    <p>Tempora reiciendis sapiente accusamus officia corrupti voluptatum ipsam laborum veritatis illum incidunt pariatur impedit quas, rem commodi! Quibusdam id eaque sunt at aut expedita commodi ut sed error praesentium tempora eligendi, nobis inventore reiciendis perferendis voluptatem blanditiis illum cupiditate velit. Et libero tempora quis quo quasi in recusandae illum quisquam?</p>
+    <p>Officia perspiciatis recusandae ad est quas asperiores officiis accusamus voluptas temporibus rerum nam quidem dolores culpa itaque in tempora repudiandae voluptatem ipsum atque inventore adipisci architecto, assumenda provident! Temporibus commodi ducimus quae qui itaque minima inventore earum laudantium aliquam officiis tenetur laboriosam eum quas, dolore aut, reprehenderit consectetur ratione! Ducimus.</p>
+    <p>Nesciunt, nam? Qui ratione et reprehenderit aspernatur architecto! Libero eligendi exercitationem porro temporibus ab, debitis rerum, vero velit perspiciatis voluptatibus itaque, mollitia harum omnis culpa quasi! Ipsa exercitationem asperiores incidunt nostrum totam. Cumque repellat sunt aliquid aliquam nisi facere dignissimos, corporis deserunt! Aliquid adipisci possimus nam eius impedit ipsum quia!</p>
+    <p>Ratione rerum hic voluptates architecto maiores quia exercitationem aspernatur consequatur ab quidem necessitatibus velit reiciendis deserunt, ad quaerat blanditiis est nihil amet facere dignissimos dolore placeat minima eos. Assumenda labore sed incidunt magnam nisi nostrum eveniet obcaecati nulla adipisci? Impedit quasi voluptatibus esse commodi amet aspernatur dolores libero recusandae repellendus?</p>
+    <p>Repudiandae aliquid reiciendis assumenda provident iste a minus, accusamus quidem voluptatum deleniti doloremque veniam cumque natus blanditiis quos impedit magni rerum aliquam fugiat nostrum eligendi cupiditate vitae quisquam eaque. Earum cumque pariatur sit voluptatem natus deleniti accusantium maxime? Obcaecati ea necessitatibus deleniti, dolore molestiae veniam a error aspernatur vitae corporis.</p>
+    <p>Dolorum eius incidunt repudiandae aliquid, non nisi perferendis. Veritatis officiis nobis, rem omnis fugiat consequuntur! Quisquam dolore vel, enim, saepe provident aliquid, atque et accusantium modi iste architecto praesentium? Ipsam quas velit molestiae sequi facilis enim soluta est natus accusamus quia obcaecati, ullam laborum quis nostrum magni aspernatur cupiditate repudiandae.</p>
+    <p>Reprehenderit ratione harum voluptatibus officiis? Ipsa neque numquam beatae odit dolorem animi, cum consequuntur iure quae nisi ab labore, amet hic rerum! Laboriosam nemo ea dignissimos optio placeat, impedit expedita quia sed, dolor similique eaque architecto odit, molestiae consequuntur quam? Iusto expedita rerum quasi sint sed, voluptate quaerat voluptatum itaque.</p>
+    <p>Ab, ex temporibus labore magni soluta, dolorem similique nobis aperiam dicta sed fuga, provident facilis ducimus eos consectetur reiciendis quis. Tempore hic voluptate porro, totam itaque quis sit eius officiis nesciunt repudiandae, doloribus veritatis fuga enim molestiae, eaque sint eligendi. Velit commodi alias architecto repellendus accusantium harum ipsum autem culpa!</p>
+    <p>Sunt quo rerum quod consequatur odit obcaecati ex veritatis debitis sed, est, ullam corporis. Excepturi asperiores aliquid sit reiciendis incidunt, magni quam nulla exercitationem facere nisi possimus labore molestias eius dolore ratione enim quas? Nam rerum ea exercitationem ut veniam corporis hic eligendi at sapiente quibusdam. Qui aliquam amet fugiat?</p>
+    <p>Beatae eum impedit sapiente reprehenderit qui doloremque dolorum itaque. Adipisci, unde quibusdam! Labore illo placeat aperiam libero ratione quisquam maxime, dolores cupiditate esse repudiandae, beatae dolore sunt inventore porro. Mollitia incidunt nulla illo iusto! Aperiam voluptate, culpa et vel officiis laudantium asperiores nulla eaque. Hic, labore vitae! Veritatis, commodi corrupti.</p>
+  </main>
+  <aside class="quote">
+    <h2>The most important quote</h2>
+    <blockquote>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum enim facere possimus tempore animi alias dolores vero velit explicabo magnam cupiditate sapiente veniam et, odio culpa dicta, aspernatur consequuntur excepturi.
+    </blockquote>
+  </aside>
+  <aside>
+    <h2>Online Users</h2>
+    <ul class="reset users">
+      <li><img src="https://i.pravatar.cc/300?u=p" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=m" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=h" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=e" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=k" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=g" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=h" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=a" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=k" alt=""></li>
+      <li><img src="https://i.pravatar.cc/300?u=q" alt=""></li>
+    </ul>
+  </aside>
+  <footer>
+    <ul class="reset">
+      <li><a href="">Lorem, ipsum.</a></li>
+      <li><a href="">Quis, accusamus?</a></li>
+      <li><a href="">Dicta, repudiandae!</a></li>
+      <li><a href="">Vero, mollitia!</a></li>
+      <li><a href="">Cumque, tenetur!</a></li>
+    </ul>
+  </footer>
+</body>
+
+</html>
