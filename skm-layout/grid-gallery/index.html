@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grid Gallery</title>
+  <style>
+
+    ul.reset {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 1em;
+      font-family: sans-serif;
+    }
+
+    .full-height {
+      display: flex;
+      flex-direction: column;
+      height: calc(100vh - 2em);
+    }
+
+    .full-height-fill {
+      flex-grow: 1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(3, 1fr);
+      gap: 1em;
+    }
+
+    .grid > * {
+      border-radius: 0.5em;
+      background-repeat: no-repeat;
+      background-position: center center;
+      background-size: cover;
+    }
+
+    .grid :nth-child(2),
+    .grid :nth-child(3) {
+      grid-column: span 2;
+    }
+
+    .grid :nth-child(4) {
+      grid-row: span 2;
+    }
+
+    li:nth-child(1) { background-image: url(https://picsum.photos/500?random=1) }
+    li:nth-child(2) { background-image: url(https://picsum.photos/500/300?random=1) }
+    li:nth-child(3) { background-image: url(https://picsum.photos/500/300?random=2) }
+    li:nth-child(4) { background-image: url(https://picsum.photos/200/600) }
+    li:nth-child(5) { background-image: url(https://picsum.photos/500?random=2) }
+    li:nth-child(6) { background-image: url(https://picsum.photos/500?random=3) }
+
+    @media (min-width: 50em) {
+      li:nth-child(1) { background-image: url(https://picsum.photos/1000?random=1) }
+      li:nth-child(2) { background-image: url(https://picsum.photos/1600/400?random=1) }
+      li:nth-child(3) { background-image: url(https://picsum.photos/1600/400?random=2) }
+      li:nth-child(4) { background-image: url(https://picsum.photos/1000?random=2) }
+      li:nth-child(5) { background-image: url(https://picsum.photos/1000?random=3) }
+      li:nth-child(6) { background-image: url(https://picsum.photos/1000?random=4) }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="full-height">
+    <h1>My Gallery</h1>
+    <ul class="reset grid full-height-fill">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+    </ul>
+  </div>
+
+
+</body>
+</html>
