@@ -1,0 +1,53 @@
+body {
+  font-family: sans-serif;
+  margin: 0;
+  padding: 2em;
+}
+
+.tone-grid {
+  display: grid;
+  grid-template-columns: 1fr 5fr;
+}
+
+.tone-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  display: flex;
+}
+
+.tone-list li {
+  width: 3em;
+  height: 5em;
+  text-align: center;
+  padding: 0.5em;
+  box-sizing: border-box;
+}
+
+.theme-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  display: flex;
+  gap: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.theme-list li {
+  width: 13.5em;
+  height: 6.75em;
+  padding: 0.5em;
+  box-sizing: border-box;
+}
+
+.buttons-list {
+  display: flex;
+
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+
+  gap: 1em;
+}
