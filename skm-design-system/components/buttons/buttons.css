@@ -1,6 +1,8 @@
 @import url(./../../styles/index.css);
 
 .button {
+  font-family: inherit;
+  font-size: inherit;
   padding: 1em 2em;
   border-radius: var(--shape-full);
   outline: 0;
@@ -23,6 +25,28 @@
 
 .button-label {
   position: relative;
+}
+
+.button.icon {
+  border-radius: var(--shape-circle);
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5em;
+  height: 2.5em;
+}
+
+.button.icon .button-label {
+  display: block;
+}
+
+.button.icon svg {
+  display: block;
+}
+
+.button.icon path {
+  fill: currentColor;
 }
 
 .button.filled {
