@@ -1,0 +1,37 @@
+@import url(./../styles/index.css);
+@import url(./../components/buttons/buttons.css);
+@import url(./../components/card/cards.css);
+
+body {
+  font-family: sans-serif;
+}
+
+.feed {
+  margin: 1em;
+
+  max-width: 35em;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.feed > * {
+  width: 100%;
+  margin-bottom: 1em;
+}
+
+.feed .card-media img {
+  width: 100%;
+}
+
+.action-list ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  display: flex;
+  gap: 0.5em;
+}
+
+.action-list {
+  display: flex;
+  justify-content: space-between;
+}

@@ -1,0 +1,35 @@
+@import url(./../../styles/index.css);
+
+.card {
+  background-color: var(--color-surface);
+  color: var(--color-on-surface);
+  border-radius: var(--shape-medium);
+  padding: 1em;
+
+  width: fit-content;
+  box-sizing: border-box;
+}
+
+.card.outlined {
+  border: 1px solid var(--color-outline);
+}
+
+.card .avatar img {
+  border-radius: 50%;
+  max-height: 4em;
+}
+
+.card .card-media {
+  padding: 1em 0;
+}
+
+.card .card-media img {
+  display: block;
+  max-width: 100%;
+}
+
+.card > header {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
