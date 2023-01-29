@@ -1,45 +1,36 @@
-.Tabs {
+:root {
+  --outline-color: hsl(0, 0%, 90%);
+}
+body {
   font-family: "Open Sans", sans-serif;
+}
+.Tabs {
   list-style-type: none;
   padding: 0;
   margin: 0;
-  border-bottom: 1px solid hsl(0, 0%, 90%);
+  display: flex;
 }
 .Tabs:after {
   content: "";
   display: block;
   clear: both;
 }
-.Tab,
-.Tab--active {
-  float: left;
-  padding: 8px 16px;
+.Tab {
+  padding: 0.5em 1em;
   background-color: white;
-  margin-left: 8px;
-  border-radius: 5px;
-  position: relative;
-  top: 1px;
+  border-top-left-radius: 0.5em;
+  border-top-right-radius: 0.5em;
   color: hsl(208, 98%, 43%);
+  border: 1px solid transparent;
+  border-bottom-color: var(--outline-color);
 }
 .Tab--active,
-.Tab:hover {
-  border: 1px solid hsl(0, 0%, 90%);
-  margin-top: -1px;
-  border-bottom: 1px solid white;
-  border-bottom-right-radius: 0;
-  border-bottom-left-radius: 0;
+.Tab:hover:not(.Tab--active) {
+  border-color: var(--outline-color);
   color: inherit;
 }
-.Tab:hover {
-  border-color: hsl(0, 0%, 95%);
-  border-bottom-color: hsl(0, 0%, 90%);
-  position: relative;
-  left: -1px;
-  margin-right: -2px;
-}
-.Tab:first-child,
-.Tab--active:first-child {
-  margin-left: 0;
+.Tab--active {
+  border-bottom-color: transparent;
 }
 .Tab a,
 .Tab--active a {
@@ -47,10 +38,15 @@
   color: inherit;
 }
 .TabPanel {
-  padding: 8px 16px;
+  padding: 0.5em 1em;
   font-family: "Open Sans", sans-serif;
+}
+.TabPanel:not(:target),
+.TabPanel:has(~ :target),
+.TabPanel:target ~ .TabPanel {
   display: none;
 }
+.TabPanel--default:not(:has(~ :target)),
 .TabPanel:target {
   display: block;
 }
