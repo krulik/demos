@@ -1,5 +1,6 @@
 :root {
-  --outline-color: hsl(0, 0%, 90%);
+  --color-outline: hsl(0, 0%, 90%);
+  --color-primary: hsl(208, 98%, 43%);
 }
 body {
   font-family: "Open Sans", sans-serif;
@@ -10,30 +11,24 @@ body {
   margin: 0;
   display: flex;
 }
-.Tabs:after {
-  content: "";
-  display: block;
-  clear: both;
-}
 .Tab {
   padding: 0.5em 1em;
   background-color: white;
   border-top-left-radius: 0.5em;
   border-top-right-radius: 0.5em;
-  color: hsl(208, 98%, 43%);
+  color: var(--color-primary);
   border: 1px solid transparent;
-  border-bottom-color: var(--outline-color);
+  border-bottom-color: var(--color-outline);
 }
 .Tab--active,
-.Tab:hover:not(.Tab--active) {
-  border-color: var(--outline-color);
+.Tab:hover:not(:target) {
+  border-color: var(--color-outline);
   color: inherit;
 }
 .Tab--active {
   border-bottom-color: transparent;
 }
-.Tab a,
-.Tab--active a {
+.Tab a {
   text-decoration: none;
   color: inherit;
 }
