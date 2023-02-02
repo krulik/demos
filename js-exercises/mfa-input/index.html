@@ -30,7 +30,7 @@
 
       <script>
         document.querySelector("#inputs")
-          .addEventListener("keypress", e => {
+          .addEventListener("keyup", e => {
             if (e.target.nextElementSibling) {
               e.target.nextElementSibling.focus();
             }
