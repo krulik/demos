@@ -1,30 +1,20 @@
-var input = document.querySelector("input");
-var fieldset = document.querySelector("fieldset");
+let input = document.querySelector('input');
+let fieldset = document.querySelector('fieldset');
 
-input.addEventListener("keydown", censorKey);
-input.addEventListener("keydown", logKey);
+input.addEventListener('keydown', onKeyDown);
 
-fieldset.addEventListener("keydown", showBadKey);
-fieldset.addEventListener("keydown", function (e) {
-  console.log("fieldset");
-});
-
-function showBadKey (e) {
-  e.currentTarget.classList.toggle("error", isBadKey(e.key));
-}
-
-function censorKey (e) {
-  if (isBadKey(e.key)) {
+function onKeyDown (e) {
+  let isError = isForbidden(e.key);
+  if (isError) {
     e.preventDefault();
+    console.error(`${e.key} is forbidden!`);
+  } else {
+    console.log(`User pressed '${e.key}'`);
   }
+  fieldset.classList.toggle('error', isError);
 }
 
-function isBadKey (key) {
-  var badKeys = ["q", "x", "w"];
+function isForbidden (key) {
+  let badKeys = ['q', 'x', 'w'];
   return badKeys.indexOf(key) >= 0;
-}
-
-function logKey (e) {
-  var method = isBadKey(e.key) ? "error" : "log";
-  console[method]("User pressed '" + e.key + "'");
 }
