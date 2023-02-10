@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+    <style>
+        input {
+          width: 50px;
+          font-size: 20px;
+          border: none;
+          background: #ececec;
+        }
+      </style>
+
+      1. make the first digit focus by default<br>
+      2. make each input receive one character and move the focus to the next empty one (like MFA code entering)
+
+      <div id="inputs">
+
+        <input id="input-1" type="text">
+        <input id="input-2" type="text">
+        <input id="input-3" type="text">
+        <input id="input-4" type="text">
+
+      </div>
+
+      <script>
+        // 1. Focus on first input
+        let inputs = document.querySelectorAll('input');
+        inputs[0].focus();
+
+        // 2. Get the value of the current input on every change
+        inputs.forEach((input) => {
+          input.addEventListener('input', onNewValue);
+        });
+        function onNewValue(eventInfo) {
+          let result = validate(eventInfo.target.value);
+
+          if (result) {
+            cleanError(eventInfo.target);
+            goToNextInput(eventInfo.target);
+          } else {
+            displayError(eventInfo.target);
+          }
+        }
+
+        // 3. validate the input
+        function validate(value) {
+          if (value.length < 4) {
+            return false;
+          }
+          let notValid = isNaN(value);
+          if (notValid) {
+            return false;
+          }
+          return true;
+        }
+
+        // 4. when validation succeeds go to next input
+        function goToNextInput(currentInputElement) {
+          let nextIndex = getIndexOfInput(currentInputElement) + 1;
+          if (nextIndex !== -1 && inputs[nextIndex]) {
+            inputs[nextIndex].focus();
+          }
+        }
+
+        // 4.a find the index
+        function getIndexOfInput(input) {
+          for (let i = 0; i < inputs.length; i++) {
+            if (inputs[i] === input) {
+              return i;
+            }
+          }
+          return -1;
+        }
+
+        // 5. display error state
+        function displayError(input) {
+          input.style.border = '1px solid red';
+          input.style.outline = '1px solid red';
+        }
+        function cleanError(input) {
+          input.style.border = 'unset';
+          input.style.outline = 'unset';
+        }
+      </script>
+</body>
+</html>

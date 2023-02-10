@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Average</title>
+    <style>
+        body {
+            padding: 1em;
+        }
+
+        table {
+            border: 1px solid;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+
+        th,
+        td {
+            border: 1px solid;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Average</td>
+                <td>?</td>
+            </tr>
+        </tfoot>
+    </table>
+    <button>Calc Average</button>
+
+    <script>
+        let studentsData = [
+            {name: 'Donatello', grade: 100, color: 'purple'},
+            {name: 'Michaelangelo', grade: 60},
+            {name: 'Raphael', grade: 70}
+        ];
+
+        function getStudentRow(studentData) {
+            let tr = document.createElement('tr');
+            let tdName = document.createElement('td');
+            tdName.textContent = studentData.name;
+
+            let tdGrade = document.createElement('td');
+            tdGrade.textContent = studentData.grade;
+
+            let columns = [tdName, tdGrade];
+            tr.append(...columns);
+            return tr;
+        }
+
+        let tbody = document.querySelector('tbody');
+
+        let rows = [getStudentRow(studentsData[2])];
+
+        tbody.append(...rows);
+    </script>
+</body>
+
+</html>
