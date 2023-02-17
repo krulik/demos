@@ -1,0 +1,30 @@
+[
+  {
+    "name":"Donatello",
+    "grade":100,
+    "color":"purple",
+    "pizzaTopping":"double cheese",
+    "icon":"./icons/donatello.png"
+  },
+  {
+    "name":"Michaelangelo",
+    "grade":60,
+    "color":"orange",
+    "pizzaTopping":"corn",
+    "icon":"./icons/michaelangelo.png"
+  },
+  {
+    "name":"Raphael",
+    "grade":70,
+    "color":"red",
+    "pizzaTopping":"ananas",
+    "icon":"./icons/raphael.png"
+  },
+  {
+    "name":"Leonardo",
+    "grade":70,
+    "color":"lightblue",
+    "pizzaTopping":"anshobi",
+    "icon":"./icons/leonardo.png"
+  }
+]

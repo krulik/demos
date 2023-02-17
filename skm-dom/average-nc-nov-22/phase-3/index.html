@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Average</title>
+    <style>
+        body {
+            padding: 1em;
+        }
+
+        table {
+            border: 1px solid;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+
+        th,
+        td {
+            border: 1px solid;
+            padding: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <table>
+        <thead>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Average</td>
+                <td>?</td>
+            </tr>
+        </tfoot>
+    </table>
+    <button>Calc Average</button>
+
+    <script>
+        function getStudentColumn(studentData, columnName) {
+            let td = document.createElement('td');
+
+            switch (columnName) {
+                case 'name':
+                    td.textContent = studentData[columnName];
+                    td.style.fontFamily = 'cursive';
+                    break;
+                case 'grade':
+                    td.textContent = studentData[columnName];
+                    td.style.fontFamily = 'monospace';
+                    break;
+                case 'color':
+                    td.style.backgroundColor = studentData[columnName];
+                    break;
+                case 'icon':
+                    let img = document.createElement('img');
+                    img.src = studentData[columnName];
+                    img.height = 50;
+                    td.append(img);
+                    break;
+                default:
+                    td.textContent = studentData[columnName];
+                    break;
+            }
+            return td;
+        }
+
+        function getStudentColumns(studentData) {
+            let columnNames = Object.keys(studentData);
+            return columnNames.map(columnName => getStudentColumn(studentData, columnName));
+        }
+
+        function getStudentRow(studentData) {
+            let tr = document.createElement('tr');
+            let tds = getStudentColumns(studentData);
+            tr.append(...tds);
+            return tr;
+        }
+
+        function getStudentsRows(studentsData) {
+            return studentsData.map((dataRow) => getStudentRow(dataRow));
+        }
+
+        function buildTableBody(studentsData) {
+            let tbody = document.querySelector('tbody');
+            let rows = getStudentsRows(studentsData);
+            tbody.append(...rows);
+        }
+
+        // Get the students data dynamically
+        let fetchPromise = fetch('./students_data.json');
+        fetchPromise
+            .then(response => { // Wait on fetch() Promise
+                console.log(response);
+                let jsonPromise = response.json();
+                return jsonPromise;
+            })
+            .then(studentsData => { // Wait on json() Promise
+                console.log(studentsData);
+                buildTableBody(studentsData);
+            });
+
+
+    </script>
+</body>
+
+</html>
