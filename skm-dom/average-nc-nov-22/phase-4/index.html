@@ -93,6 +93,31 @@
             tbody.append(...rows);
         }
 
+        function buildTableHeader(studentData) {
+            let thead = document.querySelector('thead');
+            let columnNames = Object.keys(studentData[0]);
+            let columns = columnNames.map(columnName => {
+                let th = document.createElement('th');
+                th.textContent = columnName;
+                return th;
+            });
+            thead.append(...columns);
+        }
+
+        function getAverage(studentsData) {
+            return studentsData
+                .map(student => student.grade)
+                .reduce((sum, grade) => sum + grade) / studentsData.length;
+        }
+
+        function attachAverageFunctionality(studentsData) {
+            let button = document.querySelector('button');
+            let output = document.querySelector('tfoot td:nth-child(2)');
+            button.addEventListener('click', () => {
+                output.textContent = getAverage(studentsData);
+            });
+        }
+
         // Get the students data dynamically
         let fetchPromise = fetch('./students_data.json');
         fetchPromise
@@ -103,7 +128,9 @@
             })
             .then(studentsData => { // Wait on json() Promise
                 console.log(studentsData);
+                buildTableHeader(studentsData);
                 buildTableBody(studentsData);
+                attachAverageFunctionality(studentsData);
             });
 
 
