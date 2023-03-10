@@ -4,7 +4,7 @@ function add(a, b) {
 
 function subtract(a, b) {
   if (a < b) {
-    return Error('a must be larger than b');
+    return `Result must be positive...`;
   }
   return a - b;
 }
@@ -15,44 +15,31 @@ function multiply(a, b) {
 
 function divide(a, b) {
   if (b === 0) {
-    return Error(`can't divide by zero`);
+    return `Can't divide by zero...`;
   }
   return a / b;
 }
 
-function delayedMath(fn, a, b) {
+function math(fn, a, b, callback) {
   setTimeout(() => {
-    const result = fn(a, b);
-    if (result instanceof Error) {
-      throw result;
+    let res = fn(a, b);
+
+    console.log(`${a} ${fn.name} ${b} = ${res}`);
+
+    if (typeof res === 'string') {
+      throw Error(res);
     }
-    console.log(result);
-    return result;
+
+    callback(res);
   }, 1000);
 }
 
-function handleError(err) {
-  console.error(`something's wrong: ${err}`)
-}
-
-delayedMath(add, 11, 2, (err, res) => {
-  if (err) {
-    return handleError(err);
-  }
-  delayedMath(subtract, res, 3, (err, res) => {
-    if (err) {
-      return handleError(err);
-    }
-    delayedMath(multiply, res, 4, (err, res) => {
-      if (err) {
-        return handleError(err);
-      }
-      delayedMath(divide, res, 0, (err, res) => {
-        if (err) {
-          return handleError(err);
-        }
-        console.log('done', res);
-      })
-    })
-  })
-})
+math(add, 2, 2, (res) => {
+  math(multiply, res, 10, (res) => {
+    math(divide, res, 4, (res) => {
+      math(subtract, res, 10, (res) => {
+        console.log('done');
+      });
+    });
+  });
+});
