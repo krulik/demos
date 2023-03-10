@@ -12,8 +12,8 @@ function createTurtle(turtle) {
   return img;
 }
 
-function createTracks(data) {
-  const tracks = data.map(turtle => {
+function createTracks(state) {
+  const tracks = state.data.map(turtle => {
     const track = document.createElement('div');
     track.style.height = '100px';
     track.style.backgroundColor = turtle.color;
@@ -26,7 +26,7 @@ function createTracks(data) {
   document.querySelector('#tracks').replaceChildren(...tracks);
 }
 
-function updateTracks(data) {
+function renderTracks(data) {
   Array.from(document.querySelectorAll('#tracks > div')).forEach((track, i) => {
     track.querySelector('img').style.transform = `translateX(${data[i].position}px)`;
   })
@@ -41,47 +41,47 @@ function getLead(data) {
   }, data[0]);
 }
 
-function tick(state, data, config) {
+function tick(state, config) {
   const {limit, iconWidth} = config;
   const {gameTimer} = state;
-  const lead = getLead(data);
+  const lead = getLead(state.data);
   if (lead.position + lead.speed + iconWidth > limit) {
     state.winner = lead;
     state.isPlaying = false;
     setState(state);
     return;
   }
-  for (let turtle of data) {
+  for (let turtle of state.data) {
     if (!turtle.isPaused) {
       turtle.position += turtle.speed;
     }
   }
-  updateTracks(data);
-  gameTimer.id = setTimeout(() => tick(state, data, config), 1000 / 60);
   setState(state);
+  gameTimer.id = setTimeout(() => tick(state, config), 1000 / 60);
 }
 
 function onClickTrack(track, turtle) {
   turtle.isPaused = !turtle.isPaused;
 }
 
-function resetPosition(data, pos) {
-  data.forEach(turtle => {
+function resetPosition(state, pos = 0) {
+  state.data.forEach(turtle => {
     turtle.position = pos;
   });
 }
 
 function start(state, data, config) {
-  data = data.map(turtle => ({...turtle}));
-  createTracks(data);
-  resetPosition(data, 0);
+  state.data = data.map(turtle => ({...turtle}));
+  createTracks(state);
+  resetPosition(state);
   state.isPlaying = true;
   state.startTime = Date.now();
-  tick(state, data, config);
+  tick(state, config);
 }
 
 function setState(state) {
   state = state;
+  renderTracks(state.data);
   renderInterface(state);
 }
 
@@ -114,6 +114,7 @@ const config = {
   iconWidth: 50
 };
 const state = {
+  data: [],
   gameTimer: {id: null},
   winner: null,
   isPlaying: false,
@@ -123,7 +124,7 @@ const state = {
 window.addEventListener('resize', () => {
   config.limit = document.querySelector('#tracks').offsetWidth;
 });
-document.querySelector('#reset').addEventListener('click', () => resetPosition(data, 0));
+document.querySelector('#reset').addEventListener('click', () => resetPosition(state, 0));
 document.querySelector('#restart').addEventListener('click', () => {
   clearTimeout(state.gameTimer.id);
   start(state, data, config);
