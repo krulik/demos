@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <main>
+    <form class="characters-grid" name="move">
+    <figure id="server" class="full">
+      <img src="./icons/splinter.png" alt="" height="50">
+      <output>Waiting for input...</output>
+      <figcaption>The Wise Server</figcaption>
+    </figure>
+    <figure id="add">
+      <img src="./icons/michelangelo.png" alt="" height="50">
+      <input type="radio" name="method" value="add">
+      <figcaption>The Positive Add</figcaption>
+    </figure>
+    <figure id="subtract">
+      <img src="./icons/raphael.png" alt="" height="50">
+      <input type="radio" name="method" value="subtract">
+      <figcaption>The Negative Subtract</figcaption>
+    </figure>
+    <figure id="multiply">
+      <img src="./icons/leonardo.png" alt="" height="50">
+      <input type="radio" name="method" value="multiply">
+      <figcaption>The Mighty Multiply</figcaption>
+    </figure>
+    <figure id="divide">
+      <img src="./icons/donatello.png" alt="" height="50">
+      <input type="radio" name="method" value="divide">
+      <figcaption>The Complex Divide</figcaption>
+    </figure>
+    <div class="full">
+      <label for="">Input</label>
+      <input type="number">
+      <button>Ask</button>
+    </div>
+  </form>
+  </main>
+  <section>
+    <h2>Player</h2>
+    <form class="characters-grid" name="players">
+      <figure>
+        <img src="./icons/bebop.png" alt="" height="50">
+        <input type="radio" name="player" value="player1">
+        <figcaption>The Wondering Bebop</figcaption>
+      </figure>
+      <figure>
+        <img src="./icons/rocksteady.png" alt="" height="50">
+        <input type="radio" name="player" value="player2">
+        <figcaption>The Challenged Rocksteady</figcaption>
+      </figure>
+    </form>
+  </section>
+  <script src="./index.js"></script>
+</body>
+
+</html>
