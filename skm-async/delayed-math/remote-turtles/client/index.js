@@ -67,13 +67,13 @@ function setState(newState) {
   console.log(state);
 }
 
-document.forms['method'].addEventListener('input', e => {
-  setState({method: e.target.value});
+document.forms['player'].addEventListener('input', e => {
+  setState({currentPlayer: e.target.value});
 });
 
 document.forms['move'].addEventListener('input', e => {
-  if (e.target.name === 'player') {
-    setState({currentPlayer: e.target.value});
+  if (e.target.name === 'method') {
+    setState({method: e.target.value});
     choose(state.currentPlayer);
   } else if (e.target.type === 'number') {
     setState({input: Number(e.target.value)});
