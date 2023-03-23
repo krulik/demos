@@ -3,6 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fs from 'fs';
 import https from 'https';
+import http from 'http';
 import cookieSession from 'cookie-session';
 
 const MINUTE = 1 * 60 * 1000;
@@ -27,12 +28,13 @@ app.use(cookieSession({
   maxAge: 1 * MINUTE
 }));
 
-let options = process.env.NODE_ENV === 'development' ? {
-  key: fs.readFileSync('./localhost-key.pem'),
-  cert: fs.readFileSync('./localhost.pem')
-} : {};
+let server = process.env.NODE_ENV !== 'production' ?
+  https.createServer({
+    key: fs.readFileSync('./localhost-key.pem'),
+    cert: fs.readFileSync('./localhost.pem')
+  }, app) : http.createServer(app);
 
-let server = https.createServer(options, app);
+
 let port = process.env.PORT || 3000;
 server.listen(port, () => {
   console.log(`Server listening on port=${port} env=${process.env.NODE_ENV}`);
@@ -68,8 +70,8 @@ let mathFunctions = {
 };
 
 let db = {
-  'player1': {lastResult: 0},
-  'player2': {lastResult: 0}
+  'player1': { lastResult: 0 },
+  'player2': { lastResult: 0 }
 };
 
 function authMiddleware(request, response, next) {
@@ -97,14 +99,14 @@ app.put('/player/:functionName', authMiddleware, refreshMiddleware, (request, re
   if (!(request.params.functionName in mathFunctions)) {
     return response.sendStatus(400);
   }
-  let {inputNumber} = request.body;
+  let { inputNumber } = request.body;
   if (isNaN(inputNumber)) {
     return response.sendStatus(400);
   }
 
   let fn = mathFunctions[request.params.functionName];
 
-  let {lastResult} = db[playerId];
+  let { lastResult } = db[playerId];
   let result = fn(lastResult, inputNumber);
 
   db[playerId].lastResult = result;
@@ -116,7 +118,7 @@ app.put('/player/:functionName', authMiddleware, refreshMiddleware, (request, re
 });
 
 app.post('/player/choose', (request, response) => {
-  let {playerId} = request.body;
+  let { playerId } = request.body;
   if (!playerId || !(playerId in db)) {
     return response.sendStatus(401);
   }
