@@ -27,7 +27,7 @@ app.use(cookieSession({
   httpOnly: true,
   maxAge: 1 * MINUTE,
   domain: process.env.NODE_ENV === 'production' ?
-    process.env.RENDER_EXTERNAL_HOSTNAME : undefined
+    `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : undefined
 }));
 
 let server = process.env.NODE_ENV !== 'production' ?
