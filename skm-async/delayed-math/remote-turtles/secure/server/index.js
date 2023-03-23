@@ -27,10 +27,10 @@ app.use(cookieSession({
   maxAge: 1 * MINUTE
 }));
 
-let options = {
+let options = process.env.NODE_ENV === 'development' ? {
   key: fs.readFileSync('./localhost-key.pem'),
   cert: fs.readFileSync('./localhost.pem')
-};
+} : {};
 
 let server = https.createServer(options, app);
 let port = process.env.PORT || 3000;
