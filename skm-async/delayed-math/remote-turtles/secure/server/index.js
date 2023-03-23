@@ -39,7 +39,7 @@ let server = process.env.NODE_ENV !== 'production' ?
 
 let port = process.env.PORT || 3000;
 server.listen(port, () => {
-  console.log(`Server listening on port=${port} env=${process.env.NODE_ENV}`);
+  console.log(`Server listening on port=${port} env=${process.env.NODE_ENV} domain=${process.env.RENDER_EXTERNAL_HOSTNAME}`);
 });
 
 function add(a, b) {
