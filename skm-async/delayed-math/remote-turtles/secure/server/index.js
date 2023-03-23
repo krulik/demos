@@ -25,7 +25,9 @@ app.use(cookieSession({
   sameSite: 'none',
   secure: true,
   httpOnly: true,
-  maxAge: 1 * MINUTE
+  maxAge: 1 * MINUTE,
+  domain: process.env.NODE_ENV === 'production' ?
+    process.env.RENDER_EXTERNAL_HOSTNAME : undefined
 }));
 
 let server = process.env.NODE_ENV !== 'production' ?
