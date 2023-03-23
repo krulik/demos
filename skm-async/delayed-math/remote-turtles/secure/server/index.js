@@ -35,7 +35,7 @@ let options = {
 let server = https.createServer(options, app);
 let port = process.env.PORT || 3000;
 server.listen(port, () => {
-  console.log(`Server listening on port=${port}`);
+  console.log(`Server listening on port=${port} env=${process.env.NODE_ENV}`);
 });
 
 function add(a, b) {
