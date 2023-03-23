@@ -28,8 +28,8 @@ app.use(cookieSession({
 }));
 
 let options = {
-  key: fs.readFileSync('/etc/secrets/localhost-key.pem'),
-  cert: fs.readFileSync('/etc/secrets/localhost.pem')
+  key: fs.readFileSync('./localhost-key.pem'),
+  cert: fs.readFileSync('./localhost.pem')
 };
 
 let server = https.createServer(options, app);
