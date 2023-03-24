@@ -1,10 +1,10 @@
 function sendJson(method, path, body) {
-  const BASE_URL = 'https://turtles-remote.onrender.com';
-  // const BASE_URL = 'https://localhost:3000';
+  const BASE_URL = 'https://localhost:3000';
   return fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'x-csrf-token': __csrfToken
     },
     credentials: 'include',
     body: JSON.stringify(body)
@@ -18,6 +18,10 @@ function sendJson(method, path, body) {
 
 function me() {
   return sendJson('GET', '/player/me');
+}
+
+function csrf() {
+  return sendJson('GET', '/csrf');
 }
 
 function makeMove({inputNumber, functionName}) {
@@ -49,11 +53,18 @@ function error(message) {
   `;
 }
 
+let __csrfToken;
+
 let state = {
   playerId: undefined,
   inputNumber: undefined,
   functionName: undefined
 };
+
+// Get CSRF token and store in memory
+csrf().then(({csrfToken}) => {
+  __csrfToken = csrfToken;
+});
 
 // Retrieve playerId from server on first load
 me().then(({playerId}) => {
