@@ -23,9 +23,8 @@ function moveRight(element) {
 function animate(element, propName, targetValue, step, getValue) {
   return new Promise((resolve, reject) => {
     let timerId;
-    inner();
 
-    function inner() {
+    function frame() {
       let prop = parseFloat(getComputedStyle(element).getPropertyValue(propName));
       if (isNaN(prop)) {
         reject('Number expected');
@@ -37,7 +36,9 @@ function animate(element, propName, targetValue, step, getValue) {
         return;
       }
       element.style.setProperty(propName, getValue(prop + step));
-      timerId = requestAnimationFrame(inner);
+      timerId = requestAnimationFrame(frame);
     }
+
+    timerId = requestAnimationFrame(frame);
   });
 }
