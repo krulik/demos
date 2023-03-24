@@ -37,7 +37,7 @@ function animate(element, propName, targetValue, step, getValue) {
         return;
       }
       element.style.setProperty(propName, getValue(prop + step));
-      timerId = requestAnimationFrame(inner, 0);
+      timerId = requestAnimationFrame(inner);
     }
   });
 }

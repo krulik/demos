@@ -25,9 +25,7 @@ app.use(cookieSession({
   sameSite: 'none',
   secure: true,
   httpOnly: true,
-  maxAge: 1 * MINUTE,
-  domain: process.env.NODE_ENV === 'production' ?
-    `https://${process.env.RENDER_EXTERNAL_HOSTNAME}` : undefined
+  maxAge: 1 * MINUTE
 }));
 
 let server = process.env.NODE_ENV !== 'production' ?
@@ -39,7 +37,7 @@ let server = process.env.NODE_ENV !== 'production' ?
 
 let port = process.env.PORT || 3000;
 server.listen(port, () => {
-  console.log(`Server listening on port=${port} env=${process.env.NODE_ENV} domain=${process.env.RENDER_EXTERNAL_HOSTNAME}`);
+  console.log(`Server listening on port=${port} env=${process.env.NODE_ENV}`);
 });
 
 function add(a, b) {
