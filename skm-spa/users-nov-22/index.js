@@ -1,6 +1,7 @@
 function User(props) {
   return `
     <div class="User">
+      ${Avatar(props)}
       ${UserDetails(props)}
       <p><button data-user-id="${props.id}">See more</button></p>
       <div ${props.isLoading ? '' : 'hidden'}>
@@ -15,6 +16,10 @@ function User(props) {
       ` : ''}
     </div>
   `;
+}
+
+function Avatar(props) {
+  return `<img height="150" src="https://avatars.dicebear.com/api/adventurer/${props.name}.svg">`;
 }
 
 function UserDetails(props) {
@@ -43,13 +48,25 @@ function Todo(props) {
   `;
 }
 
+function UsersList(props) {
+  return `
+    <ul class="Users">
+      ${props.users.map(user => `
+        <li>
+          ${User(user)}
+        </li>
+      `).join('')}
+    </ul>
+  `;
+}
+
 document.addEventListener('click', (e) => {
   const {userId} = e.target.dataset;
   if (!userId) {
     return;
   }
 
-  setState(actions.openUser(userId));
+  actions.openUser(userId);
 });
 
 let actions = {
@@ -68,34 +85,28 @@ let actions = {
   }
 }
 
-
-let state = {
-  users: []
-};
-
 function setState(newState) {
   state = {...state, ...newState};
   render(state);
 }
 
 function render(state) {
-  root.innerHTML = `
+  document.querySelector('#root').innerHTML = App(state);
+}
 
+function App(state) {
+  return `
     <h1>Welcome to JSBook! 🤖</h1>
 
-    <h2>These are the best profiles</h2>
+    <h2>These are the latest users</h2>
 
-    <ul class="Users">
-      ${state.users.map(user => `
-        <li>
-          ${User(user)}
-        </li>
-      `).join('')}
-    </ul>
+    ${UsersList({users: state.users})}
   `;
 }
 
-const root = document.querySelector('#root');
+let state = {
+  users: []
+};
 
 fetch('https://jsonplaceholder.typicode.com/users')
   .then(response => response.json())
