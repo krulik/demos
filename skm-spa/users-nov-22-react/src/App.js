@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 function User({ user }) {
   return (
-    <div class="User">
+    <div className="User">
       <Avatar name={user.name}></Avatar>
 
       <UserDetails user={user}></UserDetails>
@@ -15,9 +15,9 @@ function User({ user }) {
 
 function TodoList({ todos }) {
   return (
-    <ul class="Todos">
+    <ul className="Todos">
       {todos.map(todo => (
-        <li>
+        <li key={todo.id}>
           <Todo todo={todo}></Todo>
         </li>
       ))}
@@ -34,7 +34,7 @@ function Todo({ todo }) {
         type="checkbox"
         defaultChecked={todo.completed} />
 
-      <label for={`todo-${todo.id}`}>{todo.title}</label>
+      <label htmlFor={`todo-${todo.id}`}>{todo.title}</label>
     </>
   );
 }
@@ -51,7 +51,7 @@ function SmartTodo({ todo }) {
         checked={isChecked}
         onChange={(e) => {setIsChecked(!isChecked)}} />
 
-      <label for={`todo-${todo.id}`}>{todo.title}</label>
+      <label htmlFor={`todo-${todo.id}`}>{todo.title}</label>
     </>
   );
 }
@@ -83,9 +83,9 @@ function UserDetails({ user }) {
 
 function UsersList({ users }) {
   return (
-    <ul class="Users">
+    <ul className="Users">
       {users.map(user => (
-        <li>
+        <li key={user.id}>
           <User user={user}></User>
         </li>
       ))}
@@ -107,23 +107,23 @@ function App() {
 const state = {
   users: [
     {
-      name: 'John', username: 'jlennon', email: 'jlennon@beatles.com', todos: [
-        { id: '', title: 'Todo 1', completed: true }, { id: '', title: 'Todo 2', completed: false }, { id: '', title: 'Todo 3', completed: true }
+      id: '1', name: 'John', username: 'jlennon', email: 'jlennon@beatles.com', todos: [
+        { id: '11', title: 'Todo 1', completed: true }, { id: '12', title: 'Todo 2', completed: false }, { id: '13', title: 'Todo 3', completed: true }
       ]
     },
     {
-      name: 'Paul', username: 'pmccartney', email: 'pmccartney@beatles.com', todos: [
-        { id: '', title: 'Todo 1', completed: true }, { id: '', title: 'Todo 2', completed: false }, { id: '', title: 'Todo 3', completed: true }
+      id: '2', name: 'Paul', username: 'pmccartney', email: 'pmccartney@beatles.com', todos: [
+        { id: '21', title: 'Todo 1', completed: true }, { id: '22', title: 'Todo 2', completed: false }, { id: '23', title: 'Todo 3', completed: true }
       ]
     },
     {
-      name: 'George', username: 'gharrison', email: 'gharrison@beatles.com', todos: [
-        { id: '', title: 'Todo 1', completed: true }, { id: '', title: 'Todo 2', completed: false }, { id: '', title: 'Todo 3', completed: true }
+      id: '3', name: 'George', username: 'gharrison', email: 'gharrison@beatles.com', todos: [
+        { id: '31', title: 'Todo 1', completed: true }, { id: '32', title: 'Todo 2', completed: false }, { id: '33', title: 'Todo 3', completed: true }
       ]
     },
     {
-      name: 'Ringo', username: 'rstarr', email: 'rstarr@beatles.com', todos: [
-        { id: '', title: 'Todo 1', completed: true }, { id: '', title: 'Todo 2', completed: false }, { id: '', title: 'Todo 3', completed: true }
+      id: '4', name: 'Ringo', username: 'rstarr', email: 'rstarr@beatles.com', todos: [
+        { id: '41', title: 'Todo 1', completed: true }, { id: '42', title: 'Todo 2', completed: false }, { id: '43', title: 'Todo 3', completed: true }
       ]
     }
   ]
