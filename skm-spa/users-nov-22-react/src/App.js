@@ -1,24 +1,25 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 
-function Counter({ counter, onIncrease }) {
+function Balance({ value, onWithdraw }) {
 
-  let [step, setStep] = useState(1);
+  let [amount, setAmount] = useState(1);
 
   return (
     <div style={{ border: '1px solid' }}>
-      <p>Counter is {counter}</p>
+      <p>Balance is {value}</p>
       <p>
-        <input type='number' value={step} onChange={(e) => {
-          setStep(Number(e.target.value));
+        <label htmlFor="amount">Withdraw amount: </label>
+        <input id='amount' type='number' value={amount} onChange={(e) => {
+          setAmount(Number(e.target.value));
         }} />
       </p>
-      <button onClick={(e) => onIncrease(step)}>Increase</button>
+      <button onClick={(e) => onWithdraw(amount)}>Withdraw</button>
     </div>
   );
 }
 
-function User({ userId, counter, onIncrease }) {
+function User({ userId, userBalance, onWithdraw }) {
 
   let [todos, setTodos] = useState([]);
   let [isLoading, setIsLoading] = useState(false);
@@ -48,7 +49,7 @@ function User({ userId, counter, onIncrease }) {
     <div className="User">
       <Avatar name={user.name}></Avatar>
 
-      <Counter counter={counter} onIncrease={onIncrease}></Counter>
+      <Balance value={userBalance} onWithdraw={(amount) => onWithdraw(user, amount)}></Balance>
 
       <UserDetails user={user}></UserDetails>
       <p><button onClick={() => {
@@ -75,24 +76,51 @@ function User({ userId, counter, onIncrease }) {
   );
 }
 
+function getMaxWithdraw(familyBalance, users) {
+  return familyBalance - users.length;
+}
+
+function getBalancePerPerson(familyBalance, users) {
+  return familyBalance / users.length;
+}
+
+function getBalanceMap(familyBalance, users) {
+  return users.reduce((balanceMap, user) => {
+    balanceMap[user.id] = getBalancePerPerson(familyBalance, users);
+    return balanceMap;
+  }, {})
+}
+
 function UsersList({ users }) {
-  let [counter, setCounter] = useState(42);
+  let [familyBalance, setFamilyBalance] = useState(42);
+  let [error, setIsError] = useState('');
+  let balanceMap = getBalanceMap(familyBalance, users);
 
   return (
-    <ul className="Users">
-      {users.map(user => (
-        <li key={user.id}>
-          <User userId={user.id} counter={counter} onIncrease={(step) => {
-            if (Number(user.id) % 2 !== 0) {
-              console.log('Odd users cant increase counter');
-              return;
-            }
-            setCounter(counter + step);
-          }}></User>
-        </li>
-      ))}
-    </ul>
+    <>
+      <p>Family balance is <b>{familyBalance}</b> 💰</p>
+      {error ? <p style={{color: 'red'}}>{error}! 👮</p> : null}
+      <ul className="Users">
+        {users.map(user => (
+          <li key={user.id}>
+            <User userId={user.id} userBalance={balanceMap[user.id]} onWithdraw={onWithdraw}></User>
+          </li>
+        ))}
+      </ul>
+    </>
   );
+
+  function onWithdraw(user, amount) {
+    let newBalance = familyBalance - amount;
+    let perPerson = getBalancePerPerson(newBalance, users);
+    let max = getMaxWithdraw(familyBalance, users);
+    if (perPerson < 1) {
+      setIsError(`${user.name} can't withdraw more than ${max} (tried ${amount})`);
+      return;
+    }
+    setIsError('');
+    setFamilyBalance(familyBalance - amount);
+  }
 }
 
 function TodoList({ todos }) {
@@ -149,8 +177,8 @@ function UserDetails({ user }) {
 function App() {
   return (
     <>
-      <h1>Welcome to JSBook! 🤖</h1>
-      <h2>These are the latest users</h2>
+      <h1>Welcome to Family Book! 👩‍👩‍👧‍👧</h1>
+      <h2>These are the family members</h2>
 
       <UsersList users={state.users} />
     </>
