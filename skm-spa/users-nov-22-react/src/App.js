@@ -1,15 +1,97 @@
 import './App.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-function User({ user }) {
+function Counter({ counter, onIncrease }) {
+
+  let [step, setStep] = useState(1);
+
+  return (
+    <div style={{ border: '1px solid' }}>
+      <p>Counter is {counter}</p>
+      <p>
+        <input type='number' value={step} onChange={(e) => {
+          setStep(Number(e.target.value));
+        }} />
+      </p>
+      <button onClick={(e) => onIncrease(step)}>Increase</button>
+    </div>
+  );
+}
+
+function User({ userId, counter, onIncrease }) {
+
+  let [todos, setTodos] = useState([]);
+  let [isLoading, setIsLoading] = useState(false);
+  let [user, setUser] = useState({});
+
+  useEffect(() => {
+    let didEffect = false;
+
+    console.log(`useEffect for userId=${userId}`);
+    fetch(`https://jsonplaceholder.typicode.com/users?id=${userId}`)
+      .then(res => res.json())
+      .then(([data]) => {
+        if (!didEffect) {
+          setUser(data);
+        }
+      });
+
+    return () => {
+      // cleanup before next effect or on component destroy (unmount)
+      didEffect = true;
+      console.clear();
+    }
+
+  }, [userId]);
+
   return (
     <div className="User">
       <Avatar name={user.name}></Avatar>
 
+      <Counter counter={counter} onIncrease={onIncrease}></Counter>
+
       <UserDetails user={user}></UserDetails>
-      <p><button>See more</button></p>
-      <TodoList todos={user.todos}></TodoList>
+      <p><button onClick={() => {
+        setIsLoading(true);
+
+        fetch(`https://jsonplaceholder.typicode.com/todos?userId=${user.id}`)
+          .then(res => res.json())
+          .then(data => {
+            setTodos(data);
+            setIsLoading(false);
+          });
+      }}>See more</button></p>
+
+      <div>
+        {isLoading ?
+          <p>Loading...</p> : (
+          todos.length ?
+            <TodoList todos={todos}></TodoList> :
+            null
+          )
+        }
+      </div>
     </div>
+  );
+}
+
+function UsersList({ users }) {
+  let [counter, setCounter] = useState(42);
+
+  return (
+    <ul className="Users">
+      {users.map(user => (
+        <li key={user.id}>
+          <User userId={user.id} counter={counter} onIncrease={(step) => {
+            if (Number(user.id) % 2 !== 0) {
+              console.log('Odd users cant increase counter');
+              return;
+            }
+            setCounter(counter + step);
+          }}></User>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -33,23 +115,6 @@ function Todo({ todo }) {
         id={`todo-${todo.id}`}
         type="checkbox"
         defaultChecked={todo.completed} />
-
-      <label htmlFor={`todo-${todo.id}`}>{todo.title}</label>
-    </>
-  );
-}
-
-function SmartTodo({ todo }) {
-
-  const [isChecked, setIsChecked] = useState(todo.completed);
-
-  return (
-    <>
-      <input
-        id={`todo-${todo.id}`}
-        type="checkbox"
-        checked={isChecked}
-        onChange={(e) => {setIsChecked(!isChecked)}} />
 
       <label htmlFor={`todo-${todo.id}`}>{todo.title}</label>
     </>
@@ -81,18 +146,6 @@ function UserDetails({ user }) {
   );
 }
 
-function UsersList({ users }) {
-  return (
-    <ul className="Users">
-      {users.map(user => (
-        <li key={user.id}>
-          <User user={user}></User>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 function App() {
   return (
     <>
@@ -107,24 +160,16 @@ function App() {
 const state = {
   users: [
     {
-      id: '1', name: 'John', username: 'jlennon', email: 'jlennon@beatles.com', todos: [
-        { id: '11', title: 'Todo 1', completed: true }, { id: '12', title: 'Todo 2', completed: false }, { id: '13', title: 'Todo 3', completed: true }
-      ]
+      id: '1'
     },
     {
-      id: '2', name: 'Paul', username: 'pmccartney', email: 'pmccartney@beatles.com', todos: [
-        { id: '21', title: 'Todo 1', completed: true }, { id: '22', title: 'Todo 2', completed: false }, { id: '23', title: 'Todo 3', completed: true }
-      ]
+      id: '2'
     },
     {
-      id: '3', name: 'George', username: 'gharrison', email: 'gharrison@beatles.com', todos: [
-        { id: '31', title: 'Todo 1', completed: true }, { id: '32', title: 'Todo 2', completed: false }, { id: '33', title: 'Todo 3', completed: true }
-      ]
+      id: '3'
     },
     {
-      id: '4', name: 'Ringo', username: 'rstarr', email: 'rstarr@beatles.com', todos: [
-        { id: '41', title: 'Todo 1', completed: true }, { id: '42', title: 'Todo 2', completed: false }, { id: '43', title: 'Todo 3', completed: true }
-      ]
+      id: '4'
     }
   ]
 }
