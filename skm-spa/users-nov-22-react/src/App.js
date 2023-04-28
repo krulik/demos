@@ -1,7 +1,7 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
-function Balance({ value, onWithdraw }) {
+function Balance({ value, onWithdraw, onDeposit }) {
 
   let [amount, setAmount] = useState(1);
 
@@ -15,11 +15,12 @@ function Balance({ value, onWithdraw }) {
         }} />
       </p>
       <button onClick={(e) => onWithdraw(amount)}>Withdraw</button>
+      <button onClick={(e) => onDeposit(amount)}>Deposit</button>
     </div>
   );
 }
 
-function User({ userId, userBalance, onWithdraw }) {
+function User({ userId, userBalance, onWithdraw, onDeposit }) {
 
   let [todos, setTodos] = useState([]);
   let [isLoading, setIsLoading] = useState(false);
@@ -49,7 +50,10 @@ function User({ userId, userBalance, onWithdraw }) {
     <div className="User">
       <Avatar name={user.name}></Avatar>
 
-      <Balance value={userBalance} onWithdraw={(amount) => onWithdraw(user, amount)}></Balance>
+      <Balance
+        value={userBalance}
+        onWithdraw={(amount) => onWithdraw(user, amount)}
+        onDeposit={(amount) => onDeposit(user, amount)}></Balance>
 
       <UserDetails user={user}></UserDetails>
       <p><button onClick={() => {
@@ -91,35 +95,94 @@ function getBalanceMap(familyBalance, users) {
   }, {})
 }
 
-function UsersList({ users }) {
-  let [familyBalance, setFamilyBalance] = useState(42);
-  let [error, setIsError] = useState('');
+function UsersList() {
+  let [state, dispatch] = useReducer(familyBalanceReducer, initialState);
+  let {familyBalance, users} = state.data;
+  let {info, success, error} = state.ui;
+
   let balanceMap = getBalanceMap(familyBalance, users);
 
   return (
     <>
       <p>Family balance is <b>{familyBalance}</b> 💰</p>
       {error ? <p style={{color: 'red'}}>{error}! 👮</p> : null}
+      {success ? <p style={{color: 'green'}}>{success} 🍾</p> : null}
+      {info ? <p style={{color: 'blue'}}>{info} ✍️</p> : null}
       <ul className="Users">
         {users.map(user => (
           <li key={user.id}>
-            <User userId={user.id} userBalance={balanceMap[user.id]} onWithdraw={onWithdraw}></User>
+            <User
+              userId={user.id}
+              userBalance={balanceMap[user.id]}
+              onWithdraw={(user, amount) => dispatch({
+                type: 'withdraw',
+                amount,
+                userName: user.name
+              })}
+              onDeposit={(user, amount) => dispatch({
+                type: 'deposit',
+                amount,
+                userName: user.name
+              })}></User>
           </li>
         ))}
       </ul>
     </>
   );
+}
 
-  function onWithdraw(user, amount) {
-    let newBalance = familyBalance - amount;
-    let perPerson = getBalancePerPerson(newBalance, users);
-    let max = getMaxWithdraw(familyBalance, users);
-    if (perPerson < 1) {
-      setIsError(`${user.name} can't withdraw more than ${max} (tried ${amount})`);
-      return;
+function familyBalanceReducer(previousState, action) {
+  switch (action.type) {
+    case 'withdraw': {
+      let {familyBalance, users} = previousState.data;
+      let {amount, userName} = action;
+      let newBalance = familyBalance - amount;
+      let perPerson = getBalancePerPerson(newBalance, users);
+      let max = getMaxWithdraw(familyBalance, users);
+      if (perPerson < 1) {
+        return {
+          ...previousState, ...({
+            ui: {
+              info: '',
+              success: '',
+              error: `${userName} can't withdraw more than ${max} (tried ${amount})`
+            }
+          })
+        };
+      }
+      return {
+        ...previousState, ...({
+        data: {
+          users,
+          familyBalance: newBalance
+        },
+        ui: {
+          info: `${userName} withdrawn ${amount}`,
+          success: '',
+          error: ''
+        }
+      })};
     }
-    setIsError('');
-    setFamilyBalance(familyBalance - amount);
+    case 'deposit': {
+      let {familyBalance, users} = previousState.data;
+      let {amount, userName} = action;
+      let newBalance = familyBalance + amount;
+      return {
+        ...previousState, ...({
+        data: {
+          users,
+          familyBalance: newBalance
+        },
+        ui: {
+          info: '',
+          success: `${userName} had deposited ${amount}!`,
+          error: ''
+        }
+      })};
+    }
+    default: {
+      throw Error(`Invalid action ${action.type}`);
+    }
   }
 }
 
@@ -180,26 +243,34 @@ function App() {
       <h1>Welcome to Family Book! 👩‍👩‍👧‍👧</h1>
       <h2>These are the family members</h2>
 
-      <UsersList users={state.users} />
+      <UsersList />
     </>
   );
 }
 
-const state = {
-  users: [
-    {
-      id: '1'
-    },
-    {
-      id: '2'
-    },
-    {
-      id: '3'
-    },
-    {
-      id: '4'
-    }
-  ]
+const initialState = {
+  data: {
+    users: [
+      {
+        id: '1'
+      },
+      {
+        id: '2'
+      },
+      {
+        id: '3'
+      },
+      {
+        id: '4'
+      }
+    ],
+    familyBalance: 42
+  },
+  ui: {
+    error: '',
+    success: '',
+    info: ''
+  }
 }
 
 export default App;
