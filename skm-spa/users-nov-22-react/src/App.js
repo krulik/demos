@@ -1,9 +1,13 @@
 import './App.css';
 import { createContext, useContext, useEffect, useReducer, useState } from 'react';
 
-function Balance({ value, onWithdraw, onDeposit }) {
+function Balance({ userId, userName }) {
 
   let [amount, setAmount] = useState(1);
+  let {getBalanceById} = useContext(FamilyBalanceContext);
+  let dispatch = useContext(FamilyBalanceDispatch);
+
+  let value = getBalanceById(userId);
 
   return (
     <div style={{ border: '1px solid' }}>
@@ -14,18 +18,25 @@ function Balance({ value, onWithdraw, onDeposit }) {
           setAmount(Number(e.target.value));
         }} />
       </p>
-      <button onClick={(e) => onWithdraw(amount)}>Withdraw</button>
-      <button onClick={(e) => onDeposit(amount)}>Deposit</button>
+      <button onClick={(e) => dispatch({
+          type: 'withdraw',
+          amount,
+          userName
+        })}>Withdraw</button>
+      <button onClick={(e) => dispatch({
+          type: 'deposit',
+          amount,
+          userName
+        })}>Deposit</button>
     </div>
   );
 }
 
-function User({ userId, userBalance }) {
+function User({ userId }) {
 
   let [todos, setTodos] = useState([]);
   let [isLoading, setIsLoading] = useState(false);
   let [user, setUser] = useState({});
-  let dispatch = useContext(FamilyBalanceDispatch);
 
   useEffect(() => {
     let didEffect = false;
@@ -51,18 +62,7 @@ function User({ userId, userBalance }) {
     <div className="User">
       <Avatar name={user.name}></Avatar>
 
-      <Balance
-        value={userBalance}
-        onWithdraw={(amount) => dispatch({
-          type: 'withdraw',
-          amount,
-          userName: user.name
-        })}
-        onDeposit={(amount) => dispatch({
-          type: 'deposit',
-          amount,
-          userName: user.name
-        })}></Balance>
+      <Balance userId={user.id} userName={user.name}></Balance>
 
       <UserDetails user={user}></UserDetails>
       <p><button onClick={() => {
@@ -89,17 +89,17 @@ function User({ userId, userBalance }) {
   );
 }
 
-function getMaxWithdraw(familyBalance, users) {
-  return familyBalance - users.length;
+function getMaxWithdraw(familyBalance, numMembers) {
+  return familyBalance - numMembers;
 }
 
-function getBalancePerPerson(familyBalance, users) {
-  return familyBalance / users.length;
+function getBalancePerPerson(familyBalance, numMembers) {
+  return familyBalance / numMembers;
 }
 
 function getBalanceMap(familyBalance, users) {
   return users.reduce((balanceMap, user) => {
-    balanceMap[user.id] = getBalancePerPerson(familyBalance, users);
+    balanceMap[user.id] = getBalancePerPerson(familyBalance, users.length);
     return balanceMap;
   }, {})
 }
@@ -107,15 +107,28 @@ function getBalanceMap(familyBalance, users) {
 let FamilyBalanceContext = createContext(null);
 let FamilyBalanceDispatch = createContext(null);
 
-function FamilyBalance() {
-  let [state, dispatch] = useReducer(familyBalanceReducer, initialState);
-  let {familyBalance, users} = state.data;
+function FamilyBalance({members}) {
+  let [state, dispatch] = useReducer(familyBalanceReducer, {
+    data: {
+      familyBalance: 42,
+      numMembers: members.length
+    },
+    ui: {
+      error: '',
+      success: '',
+      info: ''
+    }
+  });
+  let {familyBalance} = state.data;
   let {info, success, error} = state.ui;
 
-  let balanceMap = getBalanceMap(familyBalance, users);
+  function getBalanceById(userId) {
+    let balanceMap = getBalanceMap(familyBalance, members);
+    return balanceMap[userId];
+  }
 
   return (
-    <FamilyBalanceContext.Provider value={state}>
+    <FamilyBalanceContext.Provider value={{state, getBalanceById}}>
       <FamilyBalanceDispatch.Provider value={dispatch}>
 
         <p>Family balance is <b>{familyBalance}</b> 💰</p>
@@ -123,20 +136,20 @@ function FamilyBalance() {
         {success ? <p style={{color: 'green'}}>{success} 🍾</p> : null}
         {info ? <p style={{color: 'blue'}}>{info} ✍️</p> : null}
 
-        <UsersList users={users} balanceMap={balanceMap}></UsersList>
+        <UsersList users={members}></UsersList>
 
       </FamilyBalanceDispatch.Provider>
     </FamilyBalanceContext.Provider>
   )
 }
 
-function UsersList({users, balanceMap}) {
+function UsersList({users}) {
   return (
     <>
       <ul className="Users">
         {users.map(user => (
           <li key={user.id}>
-            <User userId={user.id} userBalance={balanceMap[user.id]}>
+            <User userId={user.id}>
             </User>
           </li>
         ))}
@@ -148,11 +161,11 @@ function UsersList({users, balanceMap}) {
 function familyBalanceReducer(previousState, action) {
   switch (action.type) {
     case 'withdraw': {
-      let {familyBalance, users} = previousState.data;
+      let {familyBalance, numMembers} = previousState.data;
       let {amount, userName} = action;
       let newBalance = familyBalance - amount;
-      let perPerson = getBalancePerPerson(newBalance, users);
-      let max = getMaxWithdraw(familyBalance, users);
+      let perPerson = getBalancePerPerson(newBalance, numMembers);
+      let max = getMaxWithdraw(familyBalance, numMembers);
       if (perPerson < 1) {
         return {
           ...previousState, ...({
@@ -167,7 +180,7 @@ function familyBalanceReducer(previousState, action) {
       return {
         ...previousState, ...({
         data: {
-          users,
+          numMembers,
           familyBalance: newBalance
         },
         ui: {
@@ -178,13 +191,13 @@ function familyBalanceReducer(previousState, action) {
       })};
     }
     case 'deposit': {
-      let {familyBalance, users} = previousState.data;
+      let {familyBalance, numMembers} = previousState.data;
       let {amount, userName} = action;
       let newBalance = familyBalance + amount;
       return {
         ...previousState, ...({
         data: {
-          users,
+          numMembers,
           familyBalance: newBalance
         },
         ui: {
@@ -252,39 +265,28 @@ function UserDetails({ user }) {
 }
 
 function App() {
+  const users = [
+    {
+      id: 1
+    },
+    {
+      id: 2
+    },
+    {
+      id: 3
+    },
+    {
+      id: 4
+    }
+  ]
   return (
     <>
       <h1>Welcome to Family Book! 👩‍👩‍👧‍👧</h1>
       <h2>These are the family members</h2>
 
-      <FamilyBalance></FamilyBalance>
+      <FamilyBalance members={users}></FamilyBalance>
     </>
   );
-}
-
-const initialState = {
-  data: {
-    users: [
-      {
-        id: '1'
-      },
-      {
-        id: '2'
-      },
-      {
-        id: '3'
-      },
-      {
-        id: '4'
-      }
-    ],
-    familyBalance: 42
-  },
-  ui: {
-    error: '',
-    success: '',
-    info: ''
-  }
 }
 
 export default App;
