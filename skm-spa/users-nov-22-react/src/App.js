@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useReducer, useState } from 'react';
+import { createContext, useContext, useEffect, useReducer, useState } from 'react';
 
 function Balance({ value, onWithdraw, onDeposit }) {
 
@@ -20,11 +20,12 @@ function Balance({ value, onWithdraw, onDeposit }) {
   );
 }
 
-function User({ userId, userBalance, onWithdraw, onDeposit }) {
+function User({ userId, userBalance }) {
 
   let [todos, setTodos] = useState([]);
   let [isLoading, setIsLoading] = useState(false);
   let [user, setUser] = useState({});
+  let dispatch = useContext(FamilyBalanceDispatch);
 
   useEffect(() => {
     let didEffect = false;
@@ -52,8 +53,16 @@ function User({ userId, userBalance, onWithdraw, onDeposit }) {
 
       <Balance
         value={userBalance}
-        onWithdraw={(amount) => onWithdraw(user, amount)}
-        onDeposit={(amount) => onDeposit(user, amount)}></Balance>
+        onWithdraw={(amount) => dispatch({
+          type: 'withdraw',
+          amount,
+          userName: user.name
+        })}
+        onDeposit={(amount) => dispatch({
+          type: 'deposit',
+          amount,
+          userName: user.name
+        })}></Balance>
 
       <UserDetails user={user}></UserDetails>
       <p><button onClick={() => {
@@ -95,7 +104,10 @@ function getBalanceMap(familyBalance, users) {
   }, {})
 }
 
-function UsersList() {
+let FamilyBalanceContext = createContext(null);
+let FamilyBalanceDispatch = createContext(null);
+
+function FamilyBalance() {
   let [state, dispatch] = useReducer(familyBalanceReducer, initialState);
   let {familyBalance, users} = state.data;
   let {info, success, error} = state.ui;
@@ -103,27 +115,29 @@ function UsersList() {
   let balanceMap = getBalanceMap(familyBalance, users);
 
   return (
+    <FamilyBalanceContext.Provider value={state}>
+      <FamilyBalanceDispatch.Provider value={dispatch}>
+
+        <p>Family balance is <b>{familyBalance}</b> 💰</p>
+        {error ? <p style={{color: 'red'}}>{error}! 👮</p> : null}
+        {success ? <p style={{color: 'green'}}>{success} 🍾</p> : null}
+        {info ? <p style={{color: 'blue'}}>{info} ✍️</p> : null}
+
+        <UsersList users={users} balanceMap={balanceMap}></UsersList>
+
+      </FamilyBalanceDispatch.Provider>
+    </FamilyBalanceContext.Provider>
+  )
+}
+
+function UsersList({users, balanceMap}) {
+  return (
     <>
-      <p>Family balance is <b>{familyBalance}</b> 💰</p>
-      {error ? <p style={{color: 'red'}}>{error}! 👮</p> : null}
-      {success ? <p style={{color: 'green'}}>{success} 🍾</p> : null}
-      {info ? <p style={{color: 'blue'}}>{info} ✍️</p> : null}
       <ul className="Users">
         {users.map(user => (
           <li key={user.id}>
-            <User
-              userId={user.id}
-              userBalance={balanceMap[user.id]}
-              onWithdraw={(user, amount) => dispatch({
-                type: 'withdraw',
-                amount,
-                userName: user.name
-              })}
-              onDeposit={(user, amount) => dispatch({
-                type: 'deposit',
-                amount,
-                userName: user.name
-              })}></User>
+            <User userId={user.id} userBalance={balanceMap[user.id]}>
+            </User>
           </li>
         ))}
       </ul>
@@ -243,7 +257,7 @@ function App() {
       <h1>Welcome to Family Book! 👩‍👩‍👧‍👧</h1>
       <h2>These are the family members</h2>
 
-      <UsersList />
+      <FamilyBalance></FamilyBalance>
     </>
   );
 }
