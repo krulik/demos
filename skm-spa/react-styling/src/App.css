@@ -1,0 +1,10 @@
+body {
+  font-family: sans-serif;
+  padding: 2em;
+}
+
+ul.reset {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
