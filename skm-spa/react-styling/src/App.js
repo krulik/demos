@@ -48,13 +48,18 @@ function List({ children }) {
   );
 }
 
-function Card({ children, ...style }) {
+function useTheme(style) {
   const theme = useContext(MyThemeContext);
   const colors = theme.colors[theme.mode];
-  const themeOverride = {
+  return {
+    ...style,
     backgroundColor: colors[style.backgroundColor],
     color: colors[style.color]
   };
+}
+
+function Card({ children, ...style }) {
+  const themeOverride = useTheme(style);
 
   return (
     <div style={ {
@@ -63,7 +68,6 @@ function Card({ children, ...style }) {
       padding: '0.5em',
       width: 'fit-content',
       marginBottom: '1em',
-      ...style,
       ...themeOverride
     } }>
       <p>{children}</p>
