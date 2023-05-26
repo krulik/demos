@@ -2,27 +2,8 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Form, Navigate, Outlet, RouterProvider, createBrowserRouter, redirect, useActionData, useLocation, useLoaderData, Link, useFetcher } from 'react-router-dom';
+import { Form, Navigate, Outlet, RouterProvider, createBrowserRouter, redirect, useActionData, useLocation, useLoaderData, Link, useFetcher, useNavigate } from 'react-router-dom';
 import ErrorPage from './routes/ErrorPage';
-
-// TODO
-// users/me redundant?
-// implement /logout
-// programmatic is better?
-// -> everything in one place and perhaps don't need AuthRoute?
-// -> not really, better declarative
-
-// inner re-route (from App to /feed)
-// check APIs from downstream return 401 and redirect to login
-
-
-// TODO 2
-// 1. since going to /login invalidates user we're displaying
-// null even when authenticated
-
-// 2. actions/fetchers
-// how to structure them normally?
-
 
 function sendJson(method, path, body, csrf) {
   const BASE_URL = 'https://localhost:5000';
@@ -38,17 +19,35 @@ function sendJson(method, path, body, csrf) {
     credentials: 'include',
     body: JSON.stringify(body)
   }).then((response) => {
-    if (response.status === 401) {
-      return redirect('/login');
-    }
     if (response.status > 204) {
-      return response; // handle error upstream
+      throw response; // handle error upstream
     }
     if (response.status <= 201) {
       return response.json();
     }
     return {ok: response.status === 204};
   });
+}
+
+function useAuthFetch() {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
+  const navigate = useNavigate();
+  const authFetch = async (method, path, body, csrf) => {
+    try {
+      const res = await sendJson(method, path, body, csrf);
+      setData(res);
+    } catch (err) {
+      setError(err);
+      if (err.status === 401) {
+        return navigate('/login');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  return {isLoading, error, data, authFetch};
 }
 
 const AuthContext = createContext();
@@ -67,10 +66,10 @@ function AuthProvider() {
   )
 }
 AuthProvider.loader = ({ params, request }) => {
-  if (request.url.endsWith('/login')) {
-    return null;
-  }
-  return sendJson('GET', '/users/me');
+  // if (request.url.endsWith('/login')) {
+  //   return null;
+  // }
+  // return sendJson('GET', '/users/me');
 }
 
 function useAuth() {
