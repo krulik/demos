@@ -85,16 +85,27 @@ app.get('/csrf', (request, response) => {
   response.json({csrfToken});
 });
 
-app.get('/users/me', doubleCsrfProtection, authMiddleware, refreshMiddleware, (request, response) => {
+app.get('/users/me', authMiddleware, refreshMiddleware, (request, response) => {
   response.json(db[request.session.clientUserId]);
 });
 
-app.get('/feed', doubleCsrfProtection, authMiddleware, refreshMiddleware, (request, response) => {
+app.get('/feed', authMiddleware, refreshMiddleware, (request, response) => {
   response.json([
     {title: 'Good night', text: 'lorem'},
     {title: 'Good morning', text: 'ipsum'}
   ]);
 });
+
+app.post('/like', authMiddleware, refreshMiddleware, (request, response) => {
+  response.json({
+    text: 'i like you too'
+  });
+});
+
+app.post('/logout', (request, response) => {
+  request.session = null;
+  response.sendStatus(303);
+})
 
 app.post('/login', doubleCsrfProtection, (request, response) => {
   let { email } = request.body;
@@ -103,6 +114,7 @@ app.post('/login', doubleCsrfProtection, (request, response) => {
   }
   let user = db.findByEmail(email);
   if (!user) {
+    request.session = null;
     return response.sendStatus(401);
   }
   request.session.clientUserId = user.id;
