@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
@@ -32,21 +32,117 @@ function sendJson(method, path, body, csrf) {
   });
 }
 
+
 const AuthContext = createContext();
+const AuthStates = {
+  PENDING: 'PENDING',
+  AUTHORIZED: 'AUTHORIZED',
+  UNAUTHORIZED: 'UNAUTHORIZED'
+};
+
+const AuthActions = {
+  LOGIN_START: 'LOGIN_START',
+  LOGIN_SUCCESS: 'LOGIN_SUCCESS',
+  LOGIN_ERROR: 'LOGIN_ERROR',
+  LOG_OUT: 'LOG_OUT'
+};
+
+function authReducer(previousState, action) {
+  switch (action.type) {
+    case AuthActions.LOGIN_START: {
+      return {
+        authState: AuthStates.PENDING,
+        redirect: null,
+        user: null,
+        message: 'Pending login'
+      };
+    }
+    case AuthActions.LOGIN_SUCCESS: {
+      return {
+        authState: AuthStates.AUTHORIZED,
+        redirect: '/',
+        user: action.user,
+        message: 'Login success'
+      };
+    }
+    case AuthActions.LOGIN_ERROR: {
+      return {
+        authState: AuthStates.UNAUTHORIZED,
+        redirect: '/login',
+        user: null,
+        message: `Login error [${action.error?.statusText || action.error}]`
+      };
+    }
+    case AuthActions.LOG_OUT: {
+      return {
+        authState: AuthStates.UNAUTHORIZED,
+        redirect: '/login',
+        user: null,
+        message: 'User was logged out'
+      };
+    }
+    default: {
+      throw Error(`Invalid action ${action.type}`);
+    }
+  }
+}
 
 function AuthProvider() {
-  const [user, setUser] = useState(null);
-  const [isAuth, setIsAuth] = useState(false);
+  const [state, dispatch] = useReducer(authReducer, {
+    authState: AuthStates.UNAUTHORIZED,
+    user: null,
+    redirect: '/login',
+    message: 'Initial state'
+  });
   const navigate = useNavigate();
 
-  const contextValue = {
-    user,
-    async login({email}) {
-
-    },
-    async logout() {
-
+  useEffect(() => {
+    if (state.redirect) {
+      navigate(state.redirect);
     }
+  }, [navigate, state.redirect])
+
+  useEffect(() => {
+    login();
+  }, [])
+
+  useEffect(() => {
+    console.log(state.message, state.authState, state.redirect, state.user);
+  }, [state.authState, state.message, state.redirect, state.user])
+
+  async function login({email} = {}) {
+    dispatch({
+      type: AuthActions.LOGIN_START
+    });
+    try {
+      if (email) {
+        const {csrfToken} = await sendJson('GET', '/csrf');
+        await sendJson('POST', '/login', {email}, csrfToken);
+      }
+      const userRes = await sendJson('GET', '/users/me');
+      dispatch({
+        type: AuthActions.LOGIN_SUCCESS,
+        user: userRes
+      });
+    } catch (err) {
+      dispatch({
+        type: AuthActions.LOGIN_ERROR,
+        error: err
+      });
+    }
+  }
+  async function logout() {
+    sendJson('POST', '/logout');
+    dispatch({
+      type: AuthActions.LOG_OUT
+    });
+  }
+
+  const contextValue = {
+    user: state.user,
+    authMessage: state.message,
+    login,
+    logout
   };
 
   return (
@@ -56,12 +152,22 @@ function AuthProvider() {
   )
 }
 
+function autFetchReducer(previousState, action) {
+  switch (action.type) {
+    default: {
+      throw Error(`Unsupported action type [${action.type}]`);
+    }
+  }
+}
+
 function useAuthFetch() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [data, setData] = useState(null);
+  const [state, dispatch] = useReducer(autFetchReducer, {
+    isLoading: false,
+    error: null,
+    data: null
+  });
   const [params, setParams] = useState({});
-  const auth = useContext(AuthContext)();
+  const auth = useContext(AuthContext);
 
   const {method, path, body, csrf} = params;
 
@@ -69,7 +175,7 @@ function useAuthFetch() {
 
   }, [auth, body, csrf, method, path])
 
-  return {isLoading, error, data, setParams};
+  return {...state, setParams};
 }
 
 function AppLayout() {
@@ -82,11 +188,12 @@ function AppLayout() {
 }
 
 function AppBar() {
-  const auth = useContext(AuthContext)();
+  const auth = useContext(AuthContext);
   return (
     <header>
       <div>
         <p>{JSON.stringify(auth)}</p>
+        <p>{auth.message}</p>
       </div>
       <p>hello {String(auth.user?.name)}</p>
       <nav>
@@ -104,7 +211,7 @@ function AppBar() {
 }
 
 export function LoginPage() {
-  const auth = useContext(AuthContext)();
+  const auth = useContext(AuthContext);
   return (
     <form onSubmit={async (e) => {
       e.preventDefault();
