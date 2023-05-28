@@ -37,45 +37,15 @@ const AuthContext = createContext();
 function AuthProvider() {
   const [user, setUser] = useState(null);
   const [isAuth, setIsAuth] = useState(false);
-  const [firstLoad, setFirstLoad] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    setFirstLoad(false);
-  }, [])
-
-  useEffect(() => {
-    async function getUser() {
-      if (!firstLoad && !isAuth) {
-        setUser(null);
-      }
-      try {
-        const res = await sendJson('GET', '/users/me');
-        setUser(res);
-      } catch (err) {
-        navigate('/login');
-      }
-    }
-    getUser();
-  }, [firstLoad, isAuth, navigate])
 
   const contextValue = {
     user,
     async login({email}) {
-      try {
-        const {csrfToken} = await sendJson('GET', '/csrf');
-        const res = await sendJson('POST', '/login', {email}, csrfToken);
-        if (res.ok) {
-          setIsAuth(true);
-          navigate('/');
-        }
-      } catch (err) {
-        console.warn(`Auth error ${err}`);
-      }
+
     },
     async logout() {
-      await sendJson('POST', '/logout');
-      setIsAuth(false);
+
     }
   };
 
@@ -86,45 +56,19 @@ function AuthProvider() {
   )
 }
 
-function useAuth() {
-  return useContext(AuthContext);
-}
-
 function useAuthFetch() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [data, setData] = useState(null);
   const [params, setParams] = useState({});
+  const auth = useContext(AuthContext)();
+
   const {method, path, body, csrf} = params;
-  const auth = useAuth();
+
   useEffect(() => {
-    let ignore = false;
-    async function fetch() {
-      setIsLoading(false);
-      setError(null);
-      setData(null);
-      try {
-        if (!ignore) {
-          setIsLoading(true);
-          const res = await sendJson(method, path, body, csrf);
-          setData(res);
-        }
-      } catch (err) {
-        setError(err);
-        if (err.status === 401 || err.status === 403) {
-          return auth.logout();
-        }
-      } finally {
-        setIsLoading(false);
-      }
-      return () => {
-        ignore = true;
-      }
-    }
-    if (auth.isAuth) {
-      fetch();
-    }
+
   }, [auth, body, csrf, method, path])
+
   return {isLoading, error, data, setParams};
 }
 
@@ -138,7 +82,7 @@ function AppLayout() {
 }
 
 function AppBar() {
-  const auth = useAuth();
+  const auth = useContext(AuthContext)();
   return (
     <header>
       <div>
@@ -160,7 +104,7 @@ function AppBar() {
 }
 
 export function LoginPage() {
-  const auth = useAuth();
+  const auth = useContext(AuthContext)();
   return (
     <form onSubmit={async (e) => {
       e.preventDefault();
@@ -204,7 +148,7 @@ function Like() {
 }
 
 function Profile() {
-  const auth = useAuth();
+  const auth = useContext(AuthContext);
   return (
     <p>
       user details:
