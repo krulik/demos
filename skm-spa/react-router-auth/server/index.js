@@ -70,6 +70,7 @@ let db = {
 function authMiddleware(request, response, next) {
   let clientUserId = request.session.clientUserId;
   if (!clientUserId || !(clientUserId in db)) {
+    request.session = null;
     return response.sendStatus(401);
   }
   return next();
