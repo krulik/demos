@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from 'react';
+import React, { Suspense, createContext, useContext, useEffect, useReducer, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { Outlet, RouterProvider, createBrowserRouter, Link, useNavigate } from 'react-router-dom';
+import { Outlet, RouterProvider, createBrowserRouter, Link, useNavigate, Navigate, useLocation, Await, defer, useLoaderData, Form } from 'react-router-dom';
 import ErrorPage from './routes/ErrorPage';
 
 function sendJson(method, path, body, csrf) {
@@ -32,210 +32,78 @@ function sendJson(method, path, body, csrf) {
   });
 }
 
-const AuthContext = createContext();
-const AuthStates = {
-  PENDING: 'PENDING',
-  AUTHORIZED: 'AUTHORIZED',
-  UNAUTHORIZED: 'UNAUTHORIZED'
-};
-
-const AuthActions = {
-  AUTH_START: 'AUTH_START',
-  AUTH_SUCCESS: 'AUTH_SUCCESS',
-  AUTH_ERROR: 'AUTH_ERROR',
-  LOG_OUT: 'LOG_OUT'
-};
-
-function authReducer(previousState, action) {
-  switch (action.type) {
-    case AuthActions.AUTH_START: {
-      return {
-        authState: AuthStates.PENDING,
-        redirect: null,
-        user: null,
-        message: 'Pending login'
-      };
-    }
-    case AuthActions.AUTH_SUCCESS: {
-      return {
-        authState: AuthStates.AUTHORIZED,
-        redirect: '/feed',
-        user: action.user,
-        message: 'Login success'
-      };
-    }
-    case AuthActions.AUTH_ERROR: {
-      return {
-        authState: AuthStates.UNAUTHORIZED,
-        redirect: '/login',
-        user: null,
-        message: `Login error [${action.error?.statusText || action.error}]`
-      };
-    }
-    case AuthActions.LOG_OUT: {
-      return {
-        authState: AuthStates.UNAUTHORIZED,
-        redirect: '/login',
-        user: null,
-        message: 'User was logged out'
-      };
-    }
-    default: {
-      throw Error(`Invalid action ${action.type}`);
-    }
+async function serverAuthenticate(email) {
+  if (email) {
+    const {csrfToken} = await sendJson('GET', '/csrf');
+    await sendJson('POST', '/login', {email}, csrfToken);
   }
+  return sendJson('GET', '/users/me');
 }
 
-function AuthProvider() {
-  const [state, dispatch] = useReducer(authReducer, {
-    authState: AuthStates.UNAUTHORIZED,
-    user: null,
-    redirect: null,
-    message: 'Initial state'
-  });
-  const navigate = useNavigate();
+const AuthContext = createContext();
 
-  useEffect(() => {
-    if (state.redirect) {
-      navigate(state.redirect);
-    }
-  }, [navigate, state.redirect])
-
-  useEffect(() => {
-    authenticate();
-  }, [])
-
-  useEffect(() => {
-    console.log('AuthProvider update', {
-      message: state.message,
-      authState: state.authState,
-      redirect: state.redirect,
-      user: state.user
-    });
-  }, [state.authState, state.message, state.redirect, state.user])
-
-  async function authenticate({email} = {}) {
-    dispatch({
-      type: AuthActions.AUTH_START
-    });
-    try {
-      if (email) {
-        const {csrfToken} = await sendJson('GET', '/csrf');
-        await sendJson('POST', '/login', {email}, csrfToken);
-      }
-      const userRes = await sendJson('GET', '/users/me');
-      dispatch({
-        type: AuthActions.AUTH_SUCCESS,
-        user: userRes
-      });
-    } catch (err) {
-      dispatch({
-        type: AuthActions.AUTH_ERROR,
-        error: err
-      });
-    }
-  }
-  async function logout() {
-    sendJson('POST', '/logout');
-    dispatch({
-      type: AuthActions.LOG_OUT
-    });
-  }
-
+function AuthProvider({children, userData}) {
+  const [user, setUser] = useState(userData);
   const contextValue = {
-    user: state.user,
-    authMessage: state.message,
-    authenticate,
-    logout
-  };
-
+    user,
+    async logout() {
+      await sendJson('POST', '/logout');
+      setUser(null);
+    },
+    isAuth() {
+      return user !== null;
+    }
+  }
   return (
     <AuthContext.Provider value={contextValue}>
-      <AppBar></AppBar>
-      <Outlet></Outlet>
+      {children}
     </AuthContext.Provider>
   )
 }
 
-function autFetchReducer(previousState, action) {
-  switch (action.type) {
-    case 'FETCH_START': {
-      return {
-        isLoading: true,
-        error: null,
-        data: null,
-        message: `Starting fetch [params=${JSON.stringify(action.params)}]`
-      };
+function AuthLayout() {
+  const {userPromise} = useLoaderData();
+  return (
+    <Suspense fallback={'not loaded'}>
+      <Await
+        resolve={userPromise}
+        errorElement={'error in suspense'}
+        children={(user) => (
+          <AuthProvider userData={user}>
+            <AppBar></AppBar>
+            <Outlet></Outlet>
+          </AuthProvider>
+        )}
+        />
+    </Suspense>
+  )
+}
+AuthLayout.loader = () => {
+  return defer({userPromise: new Promise(async (resolve, reject) => {
+    try {
+      resolve(await serverAuthenticate());
+    } catch (err) {
+      console.log(err);
+      if (err.status === 401) {
+        return resolve(null);
+      }
+      return reject(err);
     }
-    case 'FETCH_SUCCESS': {
-      return {
-        isLoading: false,
-        error: null,
-        data: action.data,
-        message: `Fetch success [data=${JSON.stringify(action.data)}]`
-      };
-    }
-    case 'FETCH_ERROR': {
-      return {
-        isLoading: false,
-        error: action.error,
-        data: null,
-        message: `Fetch error [error=${action.error}]`
-      };
-    }
-    default: {
-      throw Error(`Unsupported action type [${action.type}]`);
-    }
-  }
+  })});
 }
 
-function useAuthFetch(consumerName) {
-  const [state, dispatch] = useReducer(autFetchReducer, {
-    isLoading: false,
-    error: null,
-    data: null,
-    message: `authFetch initial state [consumerName=${consumerName}]`
-  });
-  const [params, setParams] = useState({
-    method: null, path: null, body: null, csrf: null
-  });
+function ProtectedRoute() {
   const auth = useContext(AuthContext);
-
-  const {method, path, body, csrf} = params;
-
-  useEffect(() => {
-    let didCleanup = false;
-
-    async function fetch() {
-      dispatch({type: 'FETCH_START', params});
-      try {
-        const res = await sendJson(method, path, body, csrf);
-        dispatch({type: 'FETCH_SUCCESS', data: res});
-      } catch (err) {
-        dispatch({type: 'FETCH_ERROR', error: err});
-      }
-    }
-
-    if (!didCleanup && method && path) {
-      fetch();
-    }
-
-    return () => {
-      didCleanup = true;
-    }
-  }, [auth, body, csrf, method, params, path])
-
-  useEffect(() => {
-    if (state.error?.status === 401 || state.error?.status === 403) {
-      auth.logout();
-    }
-  }, [auth, state.error?.status])
-
-  useEffect(() => {
-    console.log('fetch message update', {message: state.message})
-  }, [state.message])
-
-  return {...state, setParams};
+  const location = useLocation();
+  if (!auth.isAuth() && location.pathname !== '/login') {
+    return <Navigate to={'/login'} />
+  }
+  if (auth.isAuth() && location.pathname !== '/feed') {
+    return <Navigate to={'/feed'} />
+  }
+  return (
+    <Outlet />
+  )
 }
 
 function AppBar() {
@@ -262,28 +130,24 @@ function AppBar() {
 }
 
 export function LoginPage() {
-  const auth = useContext(AuthContext);
   return (
-    <form onSubmit={async (e) => {
-      e.preventDefault();
-      auth.authenticate({email: e.target.email.value});
-      }}>
+    <Form method='post'>
       <label htmlFor='email'>Login</label>
       <input type='email' name='email' id='email' />
       <button>Submit</button>
-    </form>
+    </Form>
   );
+}
+LoginPage.action = async ({params, request}) => {
+  let formData = await request.formData();
+  return serverAuthenticate(formData.get('email'));
 }
 
 function Feed() {
-  const {isLoading, data, setParams} = useAuthFetch('Feed');
-  const posts = data;
-  useEffect(() => {
-    setParams({method: 'GET', path: '/feed'})
-  }, [setParams])
+  const posts = useLoaderData();
   return (
     <div>
-      Here comes the Feed (isLoading: {String(isLoading)})
+      Here comes the Feed (isLoading: {false})
       {posts && posts.map((post, index) => <div key={index}>
         {post.title}: {post.text}
         <Like></Like>
@@ -291,15 +155,18 @@ function Feed() {
     </div>
   )
 }
+Feed.loader = async () => {
+  return sendJson('GET', '/feed');
+}
 
 function Like() {
-  const {isLoading, data, setParams} = useAuthFetch('Like');
+  const data = useLoaderData();
   return (
     <p>
-      isLoading {String(isLoading)}
+      isLoading {false}
       data {data?.text}
       <button onClick={(e) => {
-        setParams({method: 'POST', path: '/like'})
+        sendJson('POST', '/like')
         }}>Like</button>
     </p>
   )
@@ -317,21 +184,29 @@ function Profile() {
 
 const router = createBrowserRouter([
   {
-    path: '/',
-    element: <AuthProvider />,
+    element: <AuthLayout />,
+    loader: AuthLayout.loader,
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/login',
-        element: <LoginPage />
-      },
-      {
-        path: '/feed',
-        element: <Feed />
-      },
-      {
-        path: '/profile',
-        element: <Profile />
+        path: '/',
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: '/login',
+            element: <LoginPage />,
+            action: LoginPage.action
+          },
+          {
+            path: '/feed',
+            element: <Feed />,
+            loader: Feed.loader
+          },
+          {
+            path: '/profile',
+            element: <Profile />
+          }
+        ]
       }
     ]
   }
