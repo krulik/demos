@@ -7,11 +7,13 @@ import {
   incrementAsync,
   incrementIfOdd,
   selectCount,
+  selectStatus,
 } from './counterSlice';
 import styles from './Counter.module.css';
 
 export function Counter() {
   const count = useSelector(selectCount);
+  const status = useSelector(selectStatus);
   const dispatch = useDispatch();
   const [incrementAmount, setIncrementAmount] = useState('2');
 
@@ -35,6 +37,9 @@ export function Counter() {
         >
           +
         </button>
+      </div>
+      <div className={styles.row}>
+      <span className={styles.value}>{status}</span>
       </div>
       <div className={styles.row}>
         <input

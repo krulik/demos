@@ -5,11 +5,13 @@ import { fetchCount } from './counterAPI';
 export interface CounterState {
   value: number;
   status: 'idle' | 'loading' | 'failed';
+  numChanges: number;
 }
 
 const initialState: CounterState = {
   value: 0,
   status: 'idle',
+  numChanges: 0
 };
 
 // The function below is called a thunk and allows us to perform async logic. It
